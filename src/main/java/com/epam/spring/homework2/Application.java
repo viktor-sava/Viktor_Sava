@@ -10,7 +10,7 @@ public class Application {
         System.out.println("############### Starting context... ###############");
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
         System.out.println("############### List of all beans ###############");
-        Arrays.stream(context.getBeanDefinitionNames()).forEach((s) -> System.out.println(context.getBean(s)));
+        Arrays.stream(context.getBeanDefinitionNames()).forEach((s) -> System.out.println(context.getBeanDefinition(s)));
         System.out.println("############### End of list of all beans ###############");
         System.out.println("############### Closing context... ###############");
         context.close();
