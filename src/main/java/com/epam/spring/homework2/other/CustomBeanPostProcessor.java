@@ -5,31 +5,64 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class CustomBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (bean.getClass().isAnnotationPresent(ValidationMark.class)) {
-            try {
-                Field name = bean.getClass().getDeclaredField("name");
-                Field value = bean.getClass().getDeclaredField("value");
-                name.setAccessible(true);
-                value.setAccessible(true);
-                boolean nonNull = name.get(bean) != null;
-                boolean greaterThanZero = value.get(bean) instanceof Integer && (Integer) value.get(bean) > 0;
-                if (nonNull && greaterThanZero) {
-                    System.out.println(beanName + " is valid");
-                } else {
-                    if (!nonNull) {
-                        System.out.println(beanName + " is not valid. Name can't be null");
-                    }
-                    if (!greaterThanZero) {
-                        System.out.println(beanName + " is not valid. Value must be greater than zero");
-                    }
-                }
-            } catch (NoSuchFieldException | IllegalAccessException ignored) {}
+            List<String> list = new ArrayList<>();
+            getFieldByNameAndType(bean, "name", String.class)
+                    .ifPresent(field -> {
+                        if (!getValue(bean, field).isPresent()) {
+                            list.add("'name' can't be null");
+                        }
+                    });
+            getFieldByNameAndType(bean, "value", int.class)
+                    .flatMap(obj -> this.<Integer>getValue(bean, obj))
+                    .ifPresent(value -> {
+                        if (value < 0) {
+                            list.add("'value' must be greater than zero");
+                        }
+                    });
+            if (list.isEmpty()) {
+                System.out.println(beanName + " is valid");
+            } else {
+                System.out.println(beanName + " is not valid");
+                list.forEach(System.out::println);
+            }
         }
         return bean;
     }
+
+    private <T> Optional<Field> getFieldByNameAndType(Object bean, String fieldName, Class<T> clazz) {
+        Optional<Field> fieldOptional;
+
+        try {
+            Field field = bean.getClass().getDeclaredField(fieldName);
+            if (field.getType().equals(clazz)) {
+                fieldOptional = Optional.of(field);
+            } else {
+                fieldOptional = Optional.empty();
+            }
+        } catch (NoSuchFieldException e) {
+            fieldOptional = Optional.empty();
+        }
+
+        return fieldOptional;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Optional<T> getValue(Object bean, Field field) {
+        try {
+            field.setAccessible(true);
+            return Optional.of((T) field.get(bean));
+        } catch (IllegalAccessException | NullPointerException e) {
+            return Optional.empty();
+        }
+    }
+
 }
