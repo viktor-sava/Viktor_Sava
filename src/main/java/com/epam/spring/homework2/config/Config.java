@@ -13,19 +13,18 @@ import org.springframework.core.annotation.Order;
 public class Config {
 
     @Bean(initMethod = "initMethod", destroyMethod = "destroyMethod")
-    @Order(1)
     public BeanD beanD() {
         return new BeanD();
     }
 
     @Bean(initMethod = "initMethod", destroyMethod = "destroyMethod")
-    @Order(2)
+    @DependsOn("beanD")
     public BeanB beanB() {
         return new BeanB();
     }
 
     @Bean(initMethod = "initMethod", destroyMethod = "destroyMethod")
-    @Order(3)
+    @DependsOn("beanB")
     public BeanC beanC() {
         return new BeanC();
     }
