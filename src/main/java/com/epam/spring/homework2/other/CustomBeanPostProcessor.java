@@ -14,26 +14,14 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (bean.getClass().isAnnotationPresent(ValidationMark.class)) {
-            List<String> list = new ArrayList<>();
             getFieldByNameAndType(bean, "name", String.class)
-                    .ifPresent(field -> {
-                        if (!getValue(bean, field).isPresent()) {
-                            list.add("'name' can't be null");
-                        }
-                    });
+                    .map(field -> getValue(bean, field))
+                    .filter(v -> !v.isPresent())
+                    .ifPresent(field -> System.out.println(beanName + ". 'name' can't be null"));
             getFieldByNameAndType(bean, "value", int.class)
                     .flatMap(obj -> this.<Integer>getValue(bean, obj))
-                    .ifPresent(value -> {
-                        if (value < 0) {
-                            list.add("'value' must be greater than zero");
-                        }
-                    });
-            if (list.isEmpty()) {
-                System.out.println(beanName + " is valid");
-            } else {
-                System.out.println(beanName + " is not valid");
-                list.forEach(System.out::println);
-            }
+                    .filter(v -> v < 0)
+                    .ifPresent(value -> System.out.println(beanName + ". 'value' must be greater than zero"));
         }
         return bean;
     }
