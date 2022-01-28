@@ -22,12 +22,12 @@ public class BeanA implements InitializingBean, DisposableBean, BeanValidator {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         System.out.println("Implemented InitializingBean method (init) of BeanA");
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         System.out.println("Implemented DisposableBean method (destroy) of BeanA");
     }
 
