@@ -1,11 +1,12 @@
 package com.epam.spring.homework2.beans;
 
-import com.epam.spring.homework2.validation.BeanValidator;
+import com.epam.spring.homework2.validation.ValidationMark;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 
-public class BeanA implements InitializingBean, DisposableBean, BeanValidator {
+@ValidationMark
+public class BeanA implements InitializingBean, DisposableBean {
 
     @Value("BeanA")
     private String name;
@@ -29,15 +30,5 @@ public class BeanA implements InitializingBean, DisposableBean, BeanValidator {
     @Override
     public void destroy() {
         System.out.println("Implemented DisposableBean method (destroy) of BeanA");
-    }
-
-    @Override
-    public void validate() {
-        System.out.println("Validation of " + this);
-        if (name != null && value > 0) {
-            System.out.println(getClass().getSimpleName() + " is valid");
-        } else {
-            System.out.println(getClass().getSimpleName() + " is not valid");
-        }
     }
 }

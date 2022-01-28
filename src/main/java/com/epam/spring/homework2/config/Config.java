@@ -5,7 +5,6 @@ import com.epam.spring.homework2.beans.BeanC;
 import com.epam.spring.homework2.beans.BeanD;
 import com.epam.spring.homework2.beans.BeanF;
 import org.springframework.context.annotation.*;
-import org.springframework.core.annotation.Order;
 
 @Configuration
 @Import(AnotherConfig.class)

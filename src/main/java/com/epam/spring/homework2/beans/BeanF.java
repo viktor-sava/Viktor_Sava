@@ -1,8 +1,9 @@
 package com.epam.spring.homework2.beans;
 
-import com.epam.spring.homework2.validation.BeanValidator;
+import com.epam.spring.homework2.validation.ValidationMark;
 
-public class BeanF implements BeanValidator {
+@ValidationMark
+public class BeanF {
     private String name;
     private int value;
 
@@ -12,16 +13,6 @@ public class BeanF implements BeanValidator {
                 "name='" + name + '\'' +
                 ", value='" + value + '\'' +
                 '}';
-    }
-
-    @Override
-    public void validate() {
-        System.out.println("Validation of " + this);
-        if (name != null && value > 0) {
-            System.out.println(getClass().getSimpleName() + " is valid");
-        } else {
-            System.out.println(getClass().getSimpleName() + " is not valid");
-        }
     }
 
 }

@@ -1,9 +1,10 @@
 package com.epam.spring.homework2.beans;
 
-import com.epam.spring.homework2.validation.BeanValidator;
+import com.epam.spring.homework2.validation.ValidationMark;
 import org.springframework.beans.factory.annotation.Value;
 
-public class BeanD implements BeanValidator {
+@ValidationMark
+public class BeanD {
 
     @Value("${beanD.name}")
     private String name;
@@ -25,16 +26,6 @@ public class BeanD implements BeanValidator {
 
     public void destroyMethod() {
         System.out.println("Destroy method of BeanD");
-    }
-
-    @Override
-    public void validate() {
-        System.out.println("Validation of " + this);
-        if (name != null && value > 0) {
-            System.out.println(getClass().getSimpleName() + " is valid");
-        } else {
-            System.out.println(getClass().getSimpleName() + " is not valid");
-        }
     }
 
 }
