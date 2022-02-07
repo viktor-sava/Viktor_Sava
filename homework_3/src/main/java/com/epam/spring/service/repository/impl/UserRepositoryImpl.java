@@ -3,7 +3,7 @@ package com.epam.spring.service.repository.impl;
 import com.epam.spring.exception.UserNotFoundException;
 import com.epam.spring.service.model.User;
 import com.epam.spring.service.repository.UserRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Component
 public class UserRepositoryImpl implements UserRepository {
 
     private final List<User> userList = new ArrayList<>();
