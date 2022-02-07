@@ -1,9 +1,11 @@
 package com.epam.spring.controller.dto;
 
+import com.epam.spring.service.model.ReceiptStatus;
+import com.epam.spring.service.model.User;
 import lombok.Builder;
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -12,10 +14,14 @@ public class ReceiptDto {
 
     private int id;
 
-    private Timestamp createDate;
+    private BigDecimal generalPrice;
 
-    private Timestamp updateDate;
+    private String address;
+
+    private ReceiptStatus status;
 
     private List<ReceiptItemDto> receiptItemList;
+
+    private User user;
 
 }

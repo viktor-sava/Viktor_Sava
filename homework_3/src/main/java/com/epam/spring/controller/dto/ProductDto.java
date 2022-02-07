@@ -17,13 +17,9 @@ public class ProductDto {
 
     private Long amount;
 
-    private Timestamp createDate;
-
-    private Timestamp updateDate;
-
     private Boolean active;
 
-    private CategoryDto category;
+    private String categoryName;
 
     private List<ProductDescriptionDto> productDescriptionList;
 

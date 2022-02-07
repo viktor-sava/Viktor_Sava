@@ -1,11 +1,13 @@
-package com.epam.spring.service.model;
+package com.epam.spring.controller;
 
-import com.epam.spring.service.model.enums.ErrorType;
+import com.epam.spring.service.enums.ErrorType;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
+@Data
 public class Error {
 
     private String message;

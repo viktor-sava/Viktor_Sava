@@ -1,8 +1,9 @@
-package com.epam.spring.service.model.model;
+package com.epam.spring.service.model;
 
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,6 +17,14 @@ public class Receipt {
 
     private Timestamp updateDate;
 
+    private BigDecimal generalPrice;
+
+    private String address;
+
+    private ReceiptStatus status;
+
     private List<ReceiptItem> receiptItemList;
+
+    private User user;
 
 }

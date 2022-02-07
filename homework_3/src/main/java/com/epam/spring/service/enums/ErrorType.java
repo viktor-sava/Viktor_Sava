@@ -1,4 +1,4 @@
-package com.epam.spring.service.model.enums;
+package com.epam.spring.service.enums;
 
 public enum ErrorType {
     VALIDATION_ERROR_TYPE,

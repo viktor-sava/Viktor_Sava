@@ -1,4 +1,4 @@
-package com.epam.spring.service.model.model;
+package com.epam.spring.service.model;
 
 import lombok.Builder;
 import lombok.Data;

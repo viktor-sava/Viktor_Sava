@@ -1,7 +1,7 @@
 package com.epam.spring.controller;
 
 import com.epam.spring.controller.dto.UserDto;
-import com.epam.spring.service.model.UserService;
+import com.epam.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

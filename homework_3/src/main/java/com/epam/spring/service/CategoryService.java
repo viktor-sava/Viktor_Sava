@@ -1,7 +1,7 @@
-package com.epam.spring.service.model;
-
+package com.epam.spring.service;
 
 import com.epam.spring.controller.dto.CategoryDto;
+import com.epam.spring.controller.dto.LanguageDto;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ public interface CategoryService {
 
     List<CategoryDto> listCategories();
 
-    CategoryDto createCategory(CategoryDto userDto);
+    CategoryDto createCategory(CategoryDto categoryDto);
 
-    CategoryDto updateCategory(String name, CategoryDto userDto);
+    CategoryDto updateCategory(String name, CategoryDto categoryDto);
 
     void deleteCategory(String name);
 

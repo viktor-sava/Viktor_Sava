@@ -7,8 +7,6 @@ import lombok.Data;
 @Builder
 public class LanguageDto {
 
-    private int id;
-
     private String shortName;
 
     private String fullName;

@@ -1,4 +1,4 @@
-package com.epam.spring.service.model;
+package com.epam.spring.service;
 
 import com.epam.spring.controller.dto.UserDto;
 
@@ -13,6 +13,8 @@ public interface UserService {
     UserDto createUser(UserDto userDto);
 
     UserDto updateUser(String email, UserDto userDto);
+
+    void blockUser(String email);
 
     void deleteUser(String email);
 

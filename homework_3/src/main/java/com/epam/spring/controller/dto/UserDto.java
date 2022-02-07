@@ -9,8 +9,6 @@ import java.sql.Timestamp;
 @Builder
 public class UserDto {
 
-    private int id;
-
     private String surname;
 
     private String name;
@@ -24,8 +22,6 @@ public class UserDto {
     private String password;
 
     private String repeatPassword;
-
-    private Timestamp createDate;
 
     private boolean blocked;
 

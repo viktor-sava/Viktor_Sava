@@ -1,4 +1,4 @@
-package com.epam.spring.service.model;
+package com.epam.spring.service;
 
 import com.epam.spring.controller.dto.LanguageDto;
 
