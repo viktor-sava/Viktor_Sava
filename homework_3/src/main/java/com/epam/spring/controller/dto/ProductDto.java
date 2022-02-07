@@ -1,11 +1,9 @@
 package com.epam.spring.controller.dto;
 
-import com.epam.spring.service.model.Category;
 import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Data

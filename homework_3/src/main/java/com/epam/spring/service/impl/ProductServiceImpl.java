@@ -3,8 +3,6 @@ package com.epam.spring.service.impl;
 import com.epam.spring.controller.dto.ProductDto;
 import com.epam.spring.service.ProductService;
 import com.epam.spring.service.mapper.ProductMapper;
-import com.epam.spring.service.model.Product;
-import com.epam.spring.service.model.ProductDescription;
 import com.epam.spring.service.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,6 @@
 package com.epam.spring.controller;
 
 import com.epam.spring.controller.dto.LanguageDto;
-import com.epam.spring.controller.dto.UserDto;
 import com.epam.spring.service.LanguageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
