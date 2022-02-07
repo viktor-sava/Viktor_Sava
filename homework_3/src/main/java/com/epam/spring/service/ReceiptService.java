@@ -12,6 +12,6 @@ public interface ReceiptService {
 
     void cancelReceipt(int id);
 
-    void paidReceipt(int id);
+    void payReceipt(int id);
 
 }

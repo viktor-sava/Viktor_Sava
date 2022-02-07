@@ -1,5 +1,6 @@
 package com.epam.spring.controller.dto;
 
+import com.epam.spring.service.model.Category;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,7 +20,7 @@ public class ProductDto {
 
     private Boolean active;
 
-    private String categoryName;
+    private CategoryDto category;
 
     private List<ProductDescriptionDto> productDescriptionList;
 

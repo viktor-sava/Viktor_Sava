@@ -21,15 +21,26 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProduct(String name) {
-        Product product = productRepository.getProduct(name);
-        ProductDto productDto = productMapper.mapProductDto(product);
-        productDto.setCategoryName(product.getCategory().getName());
-        return productDto;
+        return productMapper.mapProductDto(productRepository.getProduct(name));
     }
 
     @Override
     public ProductDto getProduct(int id) {
         return productMapper.mapProductDto(productRepository.getProduct(id));
+    }
+
+    @Override
+    public ProductDto getProduct(String name, String language) {
+        ProductDto product = getProduct(name);
+        product.getProductDescriptionList().removeIf(p -> !p.getLanguage().getShortName().equals(language));
+        return product;
+    }
+
+    @Override
+    public ProductDto getProduct(int id, String language) {
+        ProductDto product = getProduct(id);
+        product.getProductDescriptionList().removeIf(p -> !p.getLanguage().getShortName().equals(language));
+        return product;
     }
 
     @Override
@@ -41,10 +52,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDto> getProducts(String categoryName, String language) {
+        return productRepository.listProducts().stream()
+                .filter(p -> p.getCategory().getName().equals(categoryName))
+                .peek(product -> product.getProductDescriptionList()
+                        .removeIf(p -> !p.getLanguage().getShortName().equals(language)))
+                .map(productMapper::mapProductDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ProductDto> listProducts() {
         return productRepository.listProducts().stream()
                 .map(productMapper::mapProductDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDto> listProducts(String language) {
+        List<ProductDto> productDtoList = listProducts();
+        productDtoList.forEach(productDto -> productDto.getProductDescriptionList()
+                .removeIf(p -> !p.getLanguage().getShortName().equals(language)));
+        return productDtoList;
     }
 
     @Override

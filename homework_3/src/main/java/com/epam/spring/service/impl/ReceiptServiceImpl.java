@@ -41,7 +41,7 @@ public class ReceiptServiceImpl implements ReceiptService {
     }
 
     @Override
-    public void paidReceipt(int id) {
+    public void payReceipt(int id) {
         Receipt receipt = receiptRepository.getReceipt(id);
         receipt.setStatus(ReceiptStatus.PAID);
         receiptRepository.updateReceipt(id, receipt);
