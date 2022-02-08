@@ -6,6 +6,7 @@ import com.epam.spring.service.mapper.ReceiptMapper;
 import com.epam.spring.service.model.Receipt;
 import com.epam.spring.service.model.ReceiptStatus;
 import com.epam.spring.service.repository.ReceiptRepository;
+import com.epam.spring.service.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class ReceiptServiceImpl implements ReceiptService {
 
     private final ReceiptRepository receiptRepository;
+    private final UserRepository userRepository;
     private final ReceiptMapper receiptMapper;
 
     @Override
@@ -30,7 +32,9 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Override
     public ReceiptDto makeOrder(ReceiptDto receiptDto) {
         receiptDto.setStatus(ReceiptStatus.REGISTERED);
-        return receiptMapper.mapReceiptDto(receiptRepository.createReceipt(receiptMapper.mapReceipt(receiptDto)));
+        Receipt receipt = receiptMapper.mapReceipt(receiptDto);
+        receipt.setUser(userRepository.getUser(receiptDto.getEmail()));
+        return receiptMapper.mapReceiptDto(receiptRepository.createReceipt(receipt));
     }
 
     @Override

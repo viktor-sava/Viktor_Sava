@@ -22,6 +22,6 @@ public class ReceiptDto {
 
     private List<ReceiptItemDto> receiptItemList;
 
-    private User user;
+    private String email;
 
 }
