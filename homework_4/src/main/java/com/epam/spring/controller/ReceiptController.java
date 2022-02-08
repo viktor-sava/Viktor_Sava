@@ -24,9 +24,8 @@ public class ReceiptController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/{email}")
-    public ReceiptDto createReceipt(@PathVariable String email, @RequestBody @Validated(OnCreate.class) ReceiptDto receiptDto) {
-        receiptDto.setEmail(email);
+    @PostMapping()
+    public ReceiptDto createReceipt(@RequestBody @Validated(OnCreate.class) ReceiptDto receiptDto) {
         return receiptService.makeOrder(receiptDto);
     }
 
