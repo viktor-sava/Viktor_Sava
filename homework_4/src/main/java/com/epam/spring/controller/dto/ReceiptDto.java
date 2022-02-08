@@ -4,6 +4,7 @@ import com.epam.spring.controller.dto.group.OnCreate;
 import com.epam.spring.controller.dto.group.OnUpdate;
 import com.epam.spring.service.model.ReceiptStatus;
 import com.epam.spring.service.model.User;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Data
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReceiptDto {
 
     @Null(message = "'id' should be absent in request", groups = OnCreate.class)
