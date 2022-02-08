@@ -1,9 +1,11 @@
 package com.epam.spring.controller;
 
 import com.epam.spring.controller.dto.ReceiptDto;
+import com.epam.spring.controller.dto.group.OnCreate;
 import com.epam.spring.service.ReceiptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +24,9 @@ public class ReceiptController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public ReceiptDto createReceipt(@RequestBody ReceiptDto receiptDto) {
+    @PostMapping("/{email}")
+    public ReceiptDto createReceipt(@PathVariable String email, @RequestBody @Validated(OnCreate.class) ReceiptDto receiptDto) {
+        receiptDto.setEmail(email);
         return receiptService.makeOrder(receiptDto);
     }
 
