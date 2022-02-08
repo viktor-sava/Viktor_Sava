@@ -4,6 +4,7 @@ import com.epam.spring.controller.dto.LanguageDto;
 import com.epam.spring.service.LanguageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,13 +30,13 @@ public class LanguageController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public LanguageDto createLanguage(@RequestBody LanguageDto languageDto) {
+    public LanguageDto createLanguage(@RequestBody @Validated LanguageDto languageDto) {
         return languageService.createLanguage(languageDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{shortName}")
-    public LanguageDto updateLanguage(@PathVariable String shortName, @RequestBody LanguageDto languageDto) {
+    public LanguageDto updateLanguage(@PathVariable String shortName, @RequestBody @Validated LanguageDto languageDto) {
         return languageService.updateLanguage(shortName, languageDto);
     }
 

@@ -2,7 +2,7 @@ package com.epam.spring.controller.dto;
 
 import com.epam.spring.controller.dto.group.OnCreate;
 import com.epam.spring.controller.dto.group.OnUpdate;
-import com.epam.spring.service.contraints.anotations.Phone;
+import com.epam.spring.service.constraints.anotations.Phone;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;

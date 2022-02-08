@@ -4,6 +4,7 @@ import com.epam.spring.controller.dto.CategoryDto;
 import com.epam.spring.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,13 +30,13 @@ public class CategoryController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public CategoryDto createCategory(@RequestBody CategoryDto categoryDto) {
+    public CategoryDto createCategory(@RequestBody @Validated CategoryDto categoryDto) {
         return categoryService.createCategory(categoryDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{name}")
-    public CategoryDto updateCategory(@PathVariable String name, @RequestBody CategoryDto categoryDto) {
+    public CategoryDto updateCategory(@PathVariable String name, @RequestBody @Validated CategoryDto categoryDto) {
         return categoryService.updateCategory(name, categoryDto);
     }
 

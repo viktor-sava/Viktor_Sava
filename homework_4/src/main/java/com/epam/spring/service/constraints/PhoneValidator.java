@@ -1,6 +1,6 @@
-package com.epam.spring.service.contraints;
+package com.epam.spring.service.constraints;
 
-import com.epam.spring.service.contraints.anotations.Phone;
+import com.epam.spring.service.constraints.anotations.Phone;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

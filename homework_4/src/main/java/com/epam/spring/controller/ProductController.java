@@ -1,9 +1,12 @@
 package com.epam.spring.controller;
 
 import com.epam.spring.controller.dto.ProductDto;
+import com.epam.spring.controller.dto.group.OnCreate;
+import com.epam.spring.controller.dto.group.OnUpdate;
 import com.epam.spring.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +22,16 @@ public class ProductController {
     @GetMapping
     public List<ProductDto> getAllProducts(@RequestParam(required = false) String categoryName,
                                            @RequestParam(required = false) String language) {
-        if (categoryName == null) return productService.listProducts();
-        return productService.getProducts(categoryName);
+        if (categoryName == null) {
+            if (language == null) {
+                return productService.listProducts();
+            }
+            return productService.listProducts(language);
+        }
+        if (language == null) {
+            return productService.getProducts(categoryName);
+        }
+        return productService.getProducts(categoryName, language);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -37,13 +48,13 @@ public class ProductController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ProductDto createProduct(@RequestBody ProductDto productDto) {
+    public ProductDto createProduct(@RequestBody @Validated(OnCreate.class) ProductDto productDto) {
         return productService.createProduct(productDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/{id}")
-    public ProductDto updateProduct(@PathVariable int id, @RequestBody ProductDto productDto) {
+    public ProductDto updateProduct(@PathVariable int id, @RequestBody @Validated(OnUpdate.class) ProductDto productDto) {
         return productService.updateProduct(id, productDto);
     }
 
