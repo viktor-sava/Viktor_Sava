@@ -2,14 +2,20 @@ package com.epam.spring.service.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Data
-@Builder
+@NoArgsConstructor
+@Entity
 public class User {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
     private String surname;
 
@@ -17,12 +23,15 @@ public class User {
 
     private String patronymic;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
     private String phone;
 
     private String password;
 
+    @Column(updatable = false)
+    @CreationTimestamp
     private Timestamp createDate;
 
     private boolean blocked;

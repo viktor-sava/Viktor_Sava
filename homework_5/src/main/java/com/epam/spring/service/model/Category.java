@@ -2,17 +2,24 @@ package com.epam.spring.service.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Data
-@Builder
+@Entity
+@NoArgsConstructor
 public class Category {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
+    @UpdateTimestamp
     private Timestamp modifiedDate;
-
 }
