@@ -9,6 +9,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 @Data
@@ -41,10 +42,10 @@ public class UserDto {
     @Null(message = "'repeatPassword' should be absent in request", groups = OnUpdate.class)
     private String repeatPassword;
 
-    @Null(message = "'blocked' should be absent in request", groups = {OnCreate.class, OnUpdate.class})
-    private boolean blocked;
+    @Null(message = "'blocked' should be absent in request", groups = OnCreate.class)
+    private Boolean blocked;
 
-    @NotBlank(message = "'admin' shouldn't be empty", groups = OnCreate.class)
-    private boolean admin;
+    @NotNull(message = "'admin' shouldn't be empty", groups = OnCreate.class)
+    private Boolean admin;
 
 }
