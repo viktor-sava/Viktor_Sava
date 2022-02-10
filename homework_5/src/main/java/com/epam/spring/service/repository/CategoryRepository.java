@@ -1,19 +1,14 @@
 package com.epam.spring.service.repository;
 
 import com.epam.spring.service.model.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface CategoryRepository {
+@Repository
+public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-    Category getCategory(String name);
-
-    List<Category> listCategories();
-
-    Category createCategory(Category category);
-
-    Category updateCategory(int id, Category category);
-
-    void deleteCategory(int id);
-
+    Optional<Category> findByName(String name);
 }

@@ -1,6 +1,7 @@
 package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.ProductDto;
+import com.epam.spring.exception.ProductNotFoundException;
 import com.epam.spring.service.ProductService;
 import com.epam.spring.service.mapper.ProductMapper;
 import com.epam.spring.service.repository.ProductRepository;
@@ -19,12 +20,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProduct(String name) {
-        return productMapper.mapProductDto(productRepository.getProduct(name));
+        return productMapper.mapProductDto(productRepository.findByProductDescriptionName(name)
+                .orElseThrow(ProductNotFoundException::new));
     }
 
     @Override
     public ProductDto getProduct(int id) {
-        return productMapper.mapProductDto(productRepository.getProduct(id));
+        return productMapper.mapProductDto(productRepository.findById(id).orElseThrow(ProductNotFoundException::new));
     }
 
     @Override
@@ -43,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> getProducts(String categoryName) {
-        return productRepository.listProducts().stream()
+        return productRepository.findAll().stream()
                 .filter(p -> p.getCategory().getName().equals(categoryName))
                 .map(productMapper::mapProductDto)
                 .collect(Collectors.toList());
@@ -51,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> getProducts(String categoryName, String language) {
-        return productRepository.listProducts().stream()
+        return productRepository.findByCategoryName(categoryName).stream()
                 .filter(p -> p.getCategory().getName().equals(categoryName))
                 .peek(product -> product.getProductDescriptionList()
                         .removeIf(p -> !p.getLanguage().getShortName().equals(language)))
@@ -61,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> listProducts() {
-        return productRepository.listProducts().stream()
+        return productRepository.findAll().stream()
                 .map(productMapper::mapProductDto)
                 .collect(Collectors.toList());
     }
@@ -76,17 +78,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto createProduct(ProductDto productDto) {
-        return productMapper.mapProductDto(productRepository.createProduct(productMapper.mapProduct(productDto)));
+        return productMapper.mapProductDto(productRepository.save(productMapper.mapProduct(productDto)));
     }
 
     @Override
     public ProductDto updateProduct(int id, ProductDto productDto) {
         productDto.setId(id);
-        return productMapper.mapProductDto(productRepository.updateProduct(id, productMapper.mapProduct(productDto)));
+        return productMapper.mapProductDto(productRepository.save(productMapper.mapProduct(productDto)));
     }
 
     @Override
     public void deleteProduct(int id) {
-        productRepository.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 }
