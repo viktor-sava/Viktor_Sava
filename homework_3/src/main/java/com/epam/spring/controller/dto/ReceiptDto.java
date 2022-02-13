@@ -1,7 +1,6 @@
 package com.epam.spring.controller.dto;
 
 import com.epam.spring.service.model.ReceiptStatus;
-import com.epam.spring.service.model.User;
 import lombok.Builder;
 import lombok.Data;
 

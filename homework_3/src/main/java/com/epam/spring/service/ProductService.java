@@ -14,13 +14,7 @@ public interface ProductService {
 
     ProductDto getProduct(int id, String language);
 
-    List<ProductDto> getProducts(String categoryName);
-
-    List<ProductDto> getProducts(String categoryName, String language);
-
-    List<ProductDto> listProducts();
-
-    List<ProductDto> listProducts(String language);
+    List<ProductDto> listProducts(String categoryName, String language);
 
     ProductDto createProduct(ProductDto productDto);
 

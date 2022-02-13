@@ -3,12 +3,16 @@ package com.epam.spring.service.impl;
 import com.epam.spring.controller.dto.ProductDto;
 import com.epam.spring.service.ProductService;
 import com.epam.spring.service.mapper.ProductMapper;
+import com.epam.spring.service.model.Product;
 import com.epam.spring.service.repository.ProductRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -30,48 +34,30 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto getProduct(String name, String language) {
         ProductDto product = getProduct(name);
-        product.getProductDescriptionList().removeIf(p -> !p.getLanguage().getShortName().equals(language));
+        product.getProductDescriptionList()
+                .removeIf(p -> language != null && !p.getLanguage().getShortName().equals(language));
         return product;
     }
 
     @Override
     public ProductDto getProduct(int id, String language) {
         ProductDto product = getProduct(id);
-        product.getProductDescriptionList().removeIf(p -> !p.getLanguage().getShortName().equals(language));
+        product.getProductDescriptionList()
+                .removeIf(p -> language != null && !p.getLanguage().getShortName().equals(language));
         return product;
     }
 
     @Override
-    public List<ProductDto> getProducts(String categoryName) {
-        return productRepository.listProducts().stream()
-                .filter(p -> p.getCategory().getName().equals(categoryName))
+    public List<ProductDto> listProducts(String categoryName, String language) {
+        List<Product> products = productRepository.listProducts();
+        Optional.ofNullable(categoryName).ifPresent((name) ->
+                products.removeIf(p -> !p.getCategory().getName().equals(name)));
+        Optional.ofNullable(language).ifPresent((lang) ->
+                products.removeIf(product -> product.getProductDescriptionList()
+                                .removeIf(pd -> !pd.getLanguage().getShortName().equals(lang))));
+        return products.stream()
                 .map(productMapper::mapProductDto)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductDto> getProducts(String categoryName, String language) {
-        return productRepository.listProducts().stream()
-                .filter(p -> p.getCategory().getName().equals(categoryName))
-                .peek(product -> product.getProductDescriptionList()
-                        .removeIf(p -> !p.getLanguage().getShortName().equals(language)))
-                .map(productMapper::mapProductDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductDto> listProducts() {
-        return productRepository.listProducts().stream()
-                .map(productMapper::mapProductDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductDto> listProducts(String language) {
-        List<ProductDto> productDtoList = listProducts();
-        productDtoList.forEach(productDto -> productDto.getProductDescriptionList()
-                .removeIf(p -> !p.getLanguage().getShortName().equals(language)));
-        return productDtoList;
     }
 
     @Override
