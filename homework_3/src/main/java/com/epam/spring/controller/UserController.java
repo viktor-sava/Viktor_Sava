@@ -1,5 +1,6 @@
 package com.epam.spring.controller;
 
+import com.epam.spring.controller.dto.ExtendedUserDto;
 import com.epam.spring.controller.dto.UserDto;
 import com.epam.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +34,16 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public UserDto createUser(@RequestBody UserDto userDto) {
-        log.info("createUser with email {}", userDto.getEmail());
-        return userService.createUser(userDto);
+    public UserDto createUser(@RequestBody ExtendedUserDto extendedUserDto) {
+        log.info("createUser with email {}", extendedUserDto.getEmail());
+        return userService.createUser(extendedUserDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{email}")
-    public UserDto updateUser(@PathVariable String email, @RequestBody UserDto userDto) {
+    public UserDto updateUser(@PathVariable String email, @RequestBody ExtendedUserDto extendedUserDto) {
         log.info("updateUser by email {}", email);
-        return userService.updateUser(email, userDto);
+        return userService.updateUser(email, extendedUserDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
