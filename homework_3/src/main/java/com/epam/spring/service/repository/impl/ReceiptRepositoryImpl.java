@@ -20,7 +20,7 @@ public class ReceiptRepositoryImpl implements ReceiptRepository {
     public Receipt getReceipt(int id) {
         Optional<Receipt> optionalReceipt = receiptList.stream().filter(p -> p.getId() == id).findFirst();
         if (!optionalReceipt.isPresent()) {
-            throw new ReceiptNotFoundException();
+            throw new ReceiptNotFoundException(id);
         }
         return optionalReceipt.get();
     }
@@ -43,7 +43,7 @@ public class ReceiptRepositoryImpl implements ReceiptRepository {
     public Receipt updateReceipt(int id, Receipt receipt) {
         Optional<Receipt> optional = receiptList.stream().filter(p -> p.getId() == id).findFirst();
         if (!optional.isPresent()) {
-            throw new ReceiptNotFoundException();
+            throw new ReceiptNotFoundException(id);
         }
         receiptList.removeIf(p -> p.getId() == id);
         Receipt oldReceipt = optional.get();

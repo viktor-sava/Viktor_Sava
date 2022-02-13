@@ -1,7 +1,7 @@
 package com.epam.spring.exception;
 
 public class LanguageNotFoundException extends ServiceException {
-    public LanguageNotFoundException() {
-        super("Language is not found!");
+    public LanguageNotFoundException(String shortName) {
+        super("Language with short name " + shortName + " is not found");
     }
 }

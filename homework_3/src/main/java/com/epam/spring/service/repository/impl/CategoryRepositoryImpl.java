@@ -23,7 +23,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                 .filter(p -> p.getName().equals(name))
                 .findFirst();
         if (!optional.isPresent()) {
-            throw new CategoryNotFoundException();
+            throw new CategoryNotFoundException(name);
         }
         return optional.get();
     }
@@ -45,7 +45,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public Category updateCategory(int id, Category category) {
         Optional<Category> optional = categoryList.stream().filter(p -> p.getId() == id).findFirst();
         if (!optional.isPresent()) {
-            throw new ReceiptNotFoundException();
+            throw new CategoryNotFoundException(id);
         }
         categoryList.removeIf(p -> p.getId() == id);
         Category oldCategory = optional.get();

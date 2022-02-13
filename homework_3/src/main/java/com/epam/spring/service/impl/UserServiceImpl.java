@@ -2,6 +2,7 @@ package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.ExtendedUserDto;
 import com.epam.spring.controller.dto.UserDto;
+import com.epam.spring.exception.ServiceException;
 import com.epam.spring.service.UserService;
 import com.epam.spring.service.mapper.ExtendedUserMapper;
 import com.epam.spring.service.mapper.UserMapper;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(ExtendedUserDto userDto) {
-       return userMapper.mapUserDto(userRepository.createUser(extendedUserMapper.mapUser(userDto)));
+        return userMapper.mapUserDto(userRepository.createUser(extendedUserMapper.mapUser(userDto)));
     }
 
     @Override

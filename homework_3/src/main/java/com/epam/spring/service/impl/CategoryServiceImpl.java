@@ -37,7 +37,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto updateCategory(String name, CategoryDto categoryDto) {
-        categoryDto.setName(name);
         return categoryMapper.mapCategoryDto(
                     categoryRepository.updateCategory(
                             categoryRepository.getCategory(name).getId(),

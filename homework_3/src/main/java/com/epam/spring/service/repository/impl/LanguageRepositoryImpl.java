@@ -21,7 +21,7 @@ public class LanguageRepositoryImpl implements LanguageRepository {
                 .filter(p -> p.getShortName().equals(shortName))
                 .findFirst();
         if (!optional.isPresent()) {
-            throw new LanguageNotFoundException();
+            throw new LanguageNotFoundException(shortName);
         }
         return optional.get();
     }
@@ -42,7 +42,7 @@ public class LanguageRepositoryImpl implements LanguageRepository {
     public Language updateLanguage(String shortName, Language language) {
         Optional<Language> optional = languageList.stream().filter(p -> p.getShortName().equals(shortName)).findFirst();
         if (!optional.isPresent()) {
-            throw new ReceiptNotFoundException();
+            throw new LanguageNotFoundException(shortName);
         }
         languageList.removeIf(p -> p.getShortName().equals(shortName));
         Language oldLanguage = optional.get();

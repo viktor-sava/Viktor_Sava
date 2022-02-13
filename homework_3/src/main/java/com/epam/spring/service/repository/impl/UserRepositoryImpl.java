@@ -20,7 +20,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User getUser(String email) {
         Optional<User> optionalUser = userList.stream().filter(p -> p.getEmail().equals(email)).findFirst();
         if (!optionalUser.isPresent()) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException(email);
         }
         return optionalUser.get();
     }
@@ -42,7 +42,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User updateUser(String email, User user) {
         Optional<User> optional = userList.stream().filter(p -> p.getEmail().equals(email)).findFirst();
         if (!optional.isPresent()) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException(email);
         }
         userList.removeIf(p -> p.getEmail().equals(email));
         User oldUser = optional.get();

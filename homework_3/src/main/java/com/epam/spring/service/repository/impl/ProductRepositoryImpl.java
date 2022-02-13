@@ -23,7 +23,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .filter(p -> p.getProductDescriptionList().stream().anyMatch(pp -> pp.getName().equals(name)))
                 .findFirst();
         if (!optional.isPresent()) {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(name);
         }
         return optional.get();
     }
@@ -32,7 +32,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Product getProduct(int id) {
         Optional<Product> optional = productList.stream().filter(p -> p.getId() == id).findFirst();
         if (!optional.isPresent()) {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(id);
         }
         return optional.get();
     }
@@ -55,7 +55,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Product updateProduct(int id, Product product) {
         Optional<Product> optional = productList.stream().filter(p -> p.getId() == id).findFirst();
         if (!optional.isPresent()) {
-            throw new ReceiptNotFoundException();
+            throw new ProductNotFoundException(id);
         }
         productList.removeIf(p -> p.getId() == id);
         Product oldProduct = optional.get();
