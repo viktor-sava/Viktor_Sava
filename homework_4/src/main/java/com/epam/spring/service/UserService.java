@@ -1,6 +1,5 @@
 package com.epam.spring.service;
 
-import com.epam.spring.controller.dto.ExtendedUserDto;
 import com.epam.spring.controller.dto.UserDto;
 
 import java.util.List;
@@ -11,9 +10,9 @@ public interface UserService {
 
     List<UserDto> listUsers();
 
-    UserDto createUser(ExtendedUserDto userDto);
+    UserDto createUser(UserDto userDto);
 
-    UserDto updateUser(String email, ExtendedUserDto userDto);
+    UserDto updateUser(String email, UserDto userDto);
 
     void blockUser(String email);
 

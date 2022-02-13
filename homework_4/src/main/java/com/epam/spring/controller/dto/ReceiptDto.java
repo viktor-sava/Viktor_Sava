@@ -18,7 +18,7 @@ import java.util.List;
 public class ReceiptDto {
 
     @Null(message = "'id' should be absent in request", groups = OnCreate.class)
-    private int id;
+    private Integer id;
 
     @Null(message = "'generalPrice' should be absent in request", groups = OnCreate.class)
     private BigDecimal generalPrice;

@@ -34,14 +34,14 @@ public class ReceiptController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/{id}/cancel")
+    @PutMapping(value = "/{id}/cancel")
     public void cancelReceiptById(@PathVariable int id) {
         log.info("cancel receipt by id {}", id);
         receiptService.cancelReceipt(id);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/{id}/pay")
+    @PutMapping(value = "/{id}/pay")
     public void payReceiptById(@PathVariable int id) {
         log.info("pay receipt by id {}", id);
         receiptService.payReceipt(id);

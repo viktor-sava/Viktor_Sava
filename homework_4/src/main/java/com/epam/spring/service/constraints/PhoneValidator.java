@@ -8,6 +8,6 @@ import javax.validation.ConstraintValidatorContext;
 public class PhoneValidator implements ConstraintValidator<Phone, String> {
     @Override
     public boolean isValid(String field, ConstraintValidatorContext constraintValidatorContext) {
-        return field != null && field.matches("[0-9]+") && (field.length() > 8) && (field.length() < 14);
+        return field.matches("[0-9]{8,14}");
     }
 }

@@ -13,7 +13,7 @@ import javax.validation.constraints.Null;
 public class CategoryDto {
 
     @Null(message = "'id' should be absent in request", groups = {OnCreate.class, OnUpdate.class})
-    private int id;
+    private Integer id;
 
     @NotBlank(message = "'name' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     private String name;

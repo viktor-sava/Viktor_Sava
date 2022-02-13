@@ -8,6 +8,6 @@ import javax.validation.ConstraintValidatorContext;
 public class LanguageValidator implements ConstraintValidator<LanguageConstraint, String> {
     @Override
     public boolean isValid(String field, ConstraintValidatorContext constraintValidatorContext) {
-        return field.toLowerCase().equals(field) && field.length() == 2;
+        return field.matches("[A-Z]{2}");
     }
 }
