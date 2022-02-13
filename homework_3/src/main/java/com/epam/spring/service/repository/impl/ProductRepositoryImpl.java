@@ -1,40 +1,41 @@
 package com.epam.spring.service.repository.impl;
 
 import com.epam.spring.exception.ProductNotFoundException;
-import com.epam.spring.exception.ReceiptNotFoundException;
 import com.epam.spring.service.model.Product;
 import com.epam.spring.service.repository.ProductRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-@Component
+@Repository
 public class ProductRepositoryImpl implements ProductRepository {
 
     private final List<Product> productList = new ArrayList<>();
 
+    private static final Function<Integer, Predicate<Product>> isProductEqualsPredicate = l -> p -> p.getId() == l;
+
     @Override
     public Product getProduct(String name) {
-        Optional<Product> optional = productList.stream()
-                .filter(p -> p.getProductDescriptionList().stream().anyMatch(pp -> pp.getName().equals(name)))
-                .findFirst();
-        if (!optional.isPresent()) {
-            throw new ProductNotFoundException(name);
-        }
-        return optional.get();
+        return productList.stream()
+                .filter(p -> p.getProductDescriptionList()
+                        .stream()
+                        .anyMatch(pp -> pp.getName()
+                                .equals(name)))
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException(name));
     }
 
     @Override
     public Product getProduct(int id) {
-        Optional<Product> optional = productList.stream().filter(p -> p.getId() == id).findFirst();
-        if (!optional.isPresent()) {
-            throw new ProductNotFoundException(id);
-        }
-        return optional.get();
+        return productList.stream()
+                .filter(isProductEqualsPredicate.apply(id))
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     @Override
@@ -53,12 +54,11 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product updateProduct(int id, Product product) {
-        Optional<Product> optional = productList.stream().filter(p -> p.getId() == id).findFirst();
-        if (!optional.isPresent()) {
-            throw new ProductNotFoundException(id);
-        }
-        productList.removeIf(p -> p.getId() == id);
-        Product oldProduct = optional.get();
+        Product oldProduct = productList.stream()
+                .filter(isProductEqualsPredicate.apply(id))
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException(id));
+        productList.remove(oldProduct);
         product.setCreateDate(oldProduct.getCreateDate());
         product.setId(oldProduct.getId());
         product.setUpdateDate(Timestamp.valueOf(LocalDateTime.now()));
@@ -68,6 +68,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void deleteProduct(int id) {
-        productList.removeIf(p -> p.getId() == id);
+        productList.removeIf(isProductEqualsPredicate.apply(id));
     }
 }

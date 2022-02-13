@@ -7,6 +7,7 @@ import com.epam.spring.service.mapper.ProductMapper;
 import com.epam.spring.service.model.Product;
 import com.epam.spring.service.repository.ProductRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -74,17 +76,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto createProduct(ProductDto productDto) {
+        log.info("Product with id {} was created", productDto.getId());
         return productMapper.mapModelToDto(productRepository.createProduct(productMapper.mapDtoToModel(productDto)));
     }
 
     @Override
     public ProductDto updateProduct(int id, ProductDto productDto) {
         productDto.setId(id);
+        log.info("Product with id {} was updated", productDto.getId());
         return productMapper.mapModelToDto(productRepository.updateProduct(id, productMapper.mapDtoToModel(productDto)));
     }
 
     @Override
     public void deleteProduct(int id) {
         productRepository.deleteProduct(id);
+        log.info("Product with id {} was deleted", id);
     }
 }

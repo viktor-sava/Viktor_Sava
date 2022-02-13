@@ -3,26 +3,28 @@ package com.epam.spring.service.repository.impl;
 import com.epam.spring.exception.UserNotFoundException;
 import com.epam.spring.service.model.User;
 import com.epam.spring.service.repository.UserRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-@Component
+@Repository
 public class UserRepositoryImpl implements UserRepository {
 
     private final List<User> userList = new ArrayList<>();
 
+    private final Function<String, Predicate<User>> isEmailEquals = s -> p -> p.getEmail().equals(s);
+
     @Override
     public User getUser(String email) {
-        Optional<User> optionalUser = userList.stream().filter(p -> p.getEmail().equals(email)).findFirst();
-        if (!optionalUser.isPresent()) {
-            throw new UserNotFoundException(email);
-        }
-        return optionalUser.get();
+        return userList.stream()
+                .filter(isEmailEquals.apply(email))
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException(email));
     }
 
     @Override
@@ -40,12 +42,11 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User updateUser(String email, User user) {
-        Optional<User> optional = userList.stream().filter(p -> p.getEmail().equals(email)).findFirst();
-        if (!optional.isPresent()) {
-            throw new UserNotFoundException(email);
-        }
-        userList.removeIf(p -> p.getEmail().equals(email));
-        User oldUser = optional.get();
+        User oldUser = userList.stream()
+                .filter(isEmailEquals.apply(email))
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException(email));
+        userList.remove(oldUser);
         user.setCreateDate(oldUser.getCreateDate());
         user.setId(oldUser.getId());
         user.setEmail(email);
@@ -55,6 +56,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void deleteUser(String email) {
-        userList.removeIf(p -> p.getEmail().equals(email));
+        userList.removeIf(isEmailEquals.apply(email));
     }
 }

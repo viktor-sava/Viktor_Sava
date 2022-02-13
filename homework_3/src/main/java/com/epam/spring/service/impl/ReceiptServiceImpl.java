@@ -8,6 +8,7 @@ import com.epam.spring.service.model.ReceiptStatus;
 import com.epam.spring.service.repository.ReceiptRepository;
 import com.epam.spring.service.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ReceiptServiceImpl implements ReceiptService {
 
     private final ReceiptRepository receiptRepository;
@@ -37,6 +39,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         receiptDto.setStatus(ReceiptStatus.REGISTERED);
         Receipt receipt = receiptMapper.mapDtoToModel(receiptDto);
         receipt.setUser(userRepository.getUser(receiptDto.getEmail()));
+        log.info("Receipt with id {} was created", receiptDto.getId());
         return receiptMapper.mapModelToDto(receiptRepository.createReceipt(receipt));
     }
 
@@ -45,6 +48,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         Receipt receipt = receiptRepository.getReceipt(id);
         receipt.setStatus(ReceiptStatus.CANCELED);
         receiptRepository.updateReceipt(id, receipt);
+        log.info("Receipt with id {} was canceled", id);
     }
 
     @Override
@@ -52,5 +56,6 @@ public class ReceiptServiceImpl implements ReceiptService {
         Receipt receipt = receiptRepository.getReceipt(id);
         receipt.setStatus(ReceiptStatus.PAID);
         receiptRepository.updateReceipt(id, receipt);
+        log.info("Receipt with id {} was paid", id);
     }
 }

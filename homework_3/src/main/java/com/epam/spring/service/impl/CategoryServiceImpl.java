@@ -5,6 +5,7 @@ import com.epam.spring.service.CategoryService;
 import com.epam.spring.service.mapper.CategoryMapper;
 import com.epam.spring.service.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryMapper categoryMapper;
@@ -33,11 +35,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
+        log.info("Category with id {} was created", categoryDto.getId());
         return categoryMapper.mapModelToDto(categoryRepository.createCategory(categoryMapper.mapDtoToModel(categoryDto)));
     }
 
     @Override
     public CategoryDto updateCategory(String name, CategoryDto categoryDto) {
+        log.info("Category with id {} was updated", categoryDto.getId());
         return categoryMapper.mapModelToDto(
                 categoryRepository.updateCategory(
                         categoryRepository.getCategory(name)
@@ -50,5 +54,6 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(String name) {
         categoryRepository.deleteCategory(categoryRepository.getCategory(name)
                 .getId());
+        log.info("Category with name {} was deleted", name);
     }
 }
