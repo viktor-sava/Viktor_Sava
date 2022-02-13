@@ -1,31 +1,31 @@
 package com.epam.spring.service.repository.impl;
 
 import com.epam.spring.exception.CategoryNotFoundException;
-import com.epam.spring.exception.ReceiptNotFoundException;
 import com.epam.spring.service.model.Category;
 import com.epam.spring.service.repository.CategoryRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-@Component
+@Repository
 public class CategoryRepositoryImpl implements CategoryRepository {
 
     private final List<Category> categoryList = new ArrayList<>();
 
+    private static final Function<Integer, Predicate<Category>> isCategoryEqualsPredicate = l -> p -> p.getId() == l;
+
     @Override
     public Category getCategory(String name) {
-        Optional<Category> optional = categoryList.stream()
-                .filter(p -> p.getName().equals(name))
-                .findFirst();
-        if (!optional.isPresent()) {
-            throw new CategoryNotFoundException();
-        }
-        return optional.get();
+        return categoryList.stream()
+                .filter(p -> p.getName()
+                        .equals(name))
+                .findFirst()
+                .orElseThrow(() -> new CategoryNotFoundException(name));
     }
 
     @Override
@@ -43,12 +43,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public Category updateCategory(int id, Category category) {
-        Optional<Category> optional = categoryList.stream().filter(p -> p.getId() == id).findFirst();
-        if (!optional.isPresent()) {
-            throw new ReceiptNotFoundException();
-        }
-        categoryList.removeIf(p -> p.getId() == id);
-        Category oldCategory = optional.get();
+        Category oldCategory = categoryList.stream()
+                .filter(isCategoryEqualsPredicate.apply(id))
+                .findFirst()
+                .orElseThrow(() -> new CategoryNotFoundException(id));
+        categoryList.remove(oldCategory);
         category.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
         category.setId(oldCategory.getId());
         categoryList.add(category);
@@ -57,6 +56,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public void deleteCategory(int id) {
-        categoryList.removeIf(p -> p.getId() == id);
+        categoryList.removeIf(isCategoryEqualsPredicate.apply(id));
     }
 }

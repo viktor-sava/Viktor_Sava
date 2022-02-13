@@ -3,26 +3,28 @@ package com.epam.spring.service.repository.impl;
 import com.epam.spring.exception.ReceiptNotFoundException;
 import com.epam.spring.service.model.Receipt;
 import com.epam.spring.service.repository.ReceiptRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-@Component
+@Repository
 public class ReceiptRepositoryImpl implements ReceiptRepository {
 
     private final List<Receipt> receiptList = new ArrayList<>();
 
+    private static final Function<Integer, Predicate<Receipt>> isReceiptEqualsPredicate = l -> p -> p.getId() == l;
+
     @Override
     public Receipt getReceipt(int id) {
-        Optional<Receipt> optionalReceipt = receiptList.stream().filter(p -> p.getId() == id).findFirst();
-        if (!optionalReceipt.isPresent()) {
-            throw new ReceiptNotFoundException();
-        }
-        return optionalReceipt.get();
+        return receiptList.stream()
+                .filter(isReceiptEqualsPredicate.apply(id))
+                .findFirst()
+                .orElseThrow(() -> new ReceiptNotFoundException(id));
     }
 
     @Override
@@ -41,12 +43,11 @@ public class ReceiptRepositoryImpl implements ReceiptRepository {
 
     @Override
     public Receipt updateReceipt(int id, Receipt receipt) {
-        Optional<Receipt> optional = receiptList.stream().filter(p -> p.getId() == id).findFirst();
-        if (!optional.isPresent()) {
-            throw new ReceiptNotFoundException();
-        }
-        receiptList.removeIf(p -> p.getId() == id);
-        Receipt oldReceipt = optional.get();
+        Receipt oldReceipt = receiptList.stream()
+                .filter(isReceiptEqualsPredicate.apply(id))
+                .findFirst()
+                .orElseThrow(() -> new ReceiptNotFoundException(id));
+        receiptList.remove(oldReceipt);
         receipt.setCreateDate(oldReceipt.getCreateDate());
         receipt.setId(oldReceipt.getId());
         receipt.setUpdateDate(Timestamp.valueOf(LocalDateTime.now()));

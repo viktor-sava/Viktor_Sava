@@ -8,6 +8,7 @@ import com.epam.spring.service.model.ReceiptStatus;
 import com.epam.spring.service.repository.ReceiptRepository;
 import com.epam.spring.service.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ReceiptServiceImpl implements ReceiptService {
 
     private final ReceiptRepository receiptRepository;
@@ -23,18 +25,22 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public List<ReceiptDto> getReceipts(String email) {
-        return receiptRepository.listReceipts().stream()
-                .filter(p -> p.getUser().getEmail().equals(email))
-                .map(receiptMapper::mapReceiptDto)
+        return receiptRepository.listReceipts()
+                .stream()
+                .filter(p -> p.getUser()
+                        .getEmail()
+                        .equals(email))
+                .map(receiptMapper::mapModelToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ReceiptDto makeOrder(ReceiptDto receiptDto) {
         receiptDto.setStatus(ReceiptStatus.REGISTERED);
-        Receipt receipt = receiptMapper.mapReceipt(receiptDto);
+        Receipt receipt = receiptMapper.mapDtoToModel(receiptDto);
         receipt.setUser(userRepository.getUser(receiptDto.getEmail()));
-        return receiptMapper.mapReceiptDto(receiptRepository.createReceipt(receipt));
+        log.info("Receipt with id {} was created", receiptDto.getId());
+        return receiptMapper.mapModelToDto(receiptRepository.createReceipt(receipt));
     }
 
     @Override
@@ -42,6 +48,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         Receipt receipt = receiptRepository.getReceipt(id);
         receipt.setStatus(ReceiptStatus.CANCELED);
         receiptRepository.updateReceipt(id, receipt);
+        log.info("Receipt with id {} was canceled", id);
     }
 
     @Override
@@ -49,5 +56,6 @@ public class ReceiptServiceImpl implements ReceiptService {
         Receipt receipt = receiptRepository.getReceipt(id);
         receipt.setStatus(ReceiptStatus.PAID);
         receiptRepository.updateReceipt(id, receipt);
+        log.info("Receipt with id {} was paid", id);
     }
 }

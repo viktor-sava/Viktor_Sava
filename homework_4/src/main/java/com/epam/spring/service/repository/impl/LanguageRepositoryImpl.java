@@ -1,29 +1,29 @@
 package com.epam.spring.service.repository.impl;
 
 import com.epam.spring.exception.LanguageNotFoundException;
-import com.epam.spring.exception.ReceiptNotFoundException;
 import com.epam.spring.service.model.Language;
 import com.epam.spring.service.repository.LanguageRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-@Component
+@Repository
 public class LanguageRepositoryImpl implements LanguageRepository {
 
     private final List<Language> languageList = new ArrayList<>();
 
+    private final Function<String, Predicate<Language>> isLanguageShortNameEquals = s -> p -> p.getShortName()
+            .equals(s);
+
     @Override
     public Language getLanguage(String shortName) {
-        Optional<Language> optional = languageList.stream()
-                .filter(p -> p.getShortName().equals(shortName))
-                .findFirst();
-        if (!optional.isPresent()) {
-            throw new LanguageNotFoundException();
-        }
-        return optional.get();
+        return languageList.stream()
+                .filter(isLanguageShortNameEquals.apply(shortName))
+                .findFirst()
+                .orElseThrow(() -> new LanguageNotFoundException(shortName));
     }
 
     @Override
@@ -40,12 +40,11 @@ public class LanguageRepositoryImpl implements LanguageRepository {
 
     @Override
     public Language updateLanguage(String shortName, Language language) {
-        Optional<Language> optional = languageList.stream().filter(p -> p.getShortName().equals(shortName)).findFirst();
-        if (!optional.isPresent()) {
-            throw new ReceiptNotFoundException();
-        }
-        languageList.removeIf(p -> p.getShortName().equals(shortName));
-        Language oldLanguage = optional.get();
+        Language oldLanguage = languageList.stream()
+                .filter(isLanguageShortNameEquals.apply(shortName))
+                .findFirst()
+                .orElseThrow(() -> new LanguageNotFoundException(shortName));
+        languageList.remove(oldLanguage);
         language.setId(oldLanguage.getId());
         languageList.add(language);
         return language;
@@ -53,6 +52,6 @@ public class LanguageRepositoryImpl implements LanguageRepository {
 
     @Override
     public void deleteLanguage(String shortName) {
-        languageList.removeIf(p -> p.getShortName().equals(shortName));
+        languageList.removeIf(isLanguageShortNameEquals.apply(shortName));
     }
 }
