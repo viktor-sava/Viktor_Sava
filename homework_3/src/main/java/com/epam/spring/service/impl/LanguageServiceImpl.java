@@ -19,26 +19,27 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public LanguageDto getLanguage(String shortName) {
-        return languageMapper.mapLanguageDto(languageRepository.getLanguage(shortName));
+        return languageMapper.mapModelToDto(languageRepository.getLanguage(shortName));
     }
 
     @Override
     public List<LanguageDto> listLanguages() {
-        return languageRepository.listLanguages().stream()
-                .map(languageMapper::mapLanguageDto)
+        return languageRepository.listLanguages()
+                .stream()
+                .map(languageMapper::mapModelToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public LanguageDto createLanguage(LanguageDto languageDto) {
         return languageMapper
-                .mapLanguageDto(languageRepository.createLanguage(languageMapper.mapLanguage(languageDto)));
+                .mapModelToDto(languageRepository.createLanguage(languageMapper.mapDtoToModel(languageDto)));
     }
 
     @Override
     public LanguageDto updateLanguage(String shortName, LanguageDto languageDto) {
         return languageMapper
-                .mapLanguageDto(languageRepository.updateLanguage(shortName, languageMapper.mapLanguage(languageDto)));
+                .mapModelToDto(languageRepository.updateLanguage(shortName, languageMapper.mapDtoToModel(languageDto)));
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.ExtendedUserDto;
 import com.epam.spring.controller.dto.UserDto;
-import com.epam.spring.exception.ServiceException;
 import com.epam.spring.service.UserService;
 import com.epam.spring.service.mapper.ExtendedUserMapper;
 import com.epam.spring.service.mapper.UserMapper;
@@ -24,23 +23,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(String email) {
-        return userMapper.mapUserDto(userRepository.getUser(email));
+        return userMapper.mapModelToDto(userRepository.getUser(email));
     }
 
     @Override
     public List<UserDto> listUsers() {
-        return userRepository.listUsers().stream().map(userMapper::mapUserDto).collect(Collectors.toList());
+        return userRepository.listUsers()
+                .stream()
+                .map(userMapper::mapModelToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public UserDto createUser(ExtendedUserDto userDto) {
-        return userMapper.mapUserDto(userRepository.createUser(extendedUserMapper.mapUser(userDto)));
+        return userMapper.mapModelToDto(userRepository.createUser(extendedUserMapper.mapDtoToModel(userDto)));
     }
 
     @Override
     public UserDto updateUser(String email, ExtendedUserDto userDto) {
         userDto.setEmail(email);
-        return userMapper.mapUserDto(userRepository.updateUser(email, extendedUserMapper.mapUser(userDto)));
+        return userMapper.mapModelToDto(userRepository.updateUser(email, extendedUserMapper.mapDtoToModel(userDto)));
     }
 
     @Override

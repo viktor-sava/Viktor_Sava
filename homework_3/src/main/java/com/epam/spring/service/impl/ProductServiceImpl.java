@@ -7,7 +7,6 @@ import com.epam.spring.service.mapper.ProductMapper;
 import com.epam.spring.service.model.Product;
 import com.epam.spring.service.repository.ProductRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -25,16 +23,18 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
     private static final Function<String, Predicate<ProductDescriptionDto>> isNotLanguagePredicate = l -> p ->
-            !p.getLanguage().getShortName().equals(l);
+            !p.getLanguage()
+                    .getShortName()
+                    .equals(l);
 
     @Override
     public ProductDto getProduct(String name) {
-        return productMapper.mapProductDto(productRepository.getProduct(name));
+        return productMapper.mapModelToDto(productRepository.getProduct(name));
     }
 
     @Override
     public ProductDto getProduct(int id) {
-        return productMapper.mapProductDto(productRepository.getProduct(id));
+        return productMapper.mapModelToDto(productRepository.getProduct(id));
     }
 
     @Override
@@ -56,25 +56,31 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> listProducts(String categoryName, String language) {
         List<Product> products = productRepository.listProducts();
-        Optional.ofNullable(categoryName).ifPresent((name) ->
-                products.removeIf(p -> !p.getCategory().getName().equals(name)));
-        Optional.ofNullable(language).ifPresent((lang) ->
-                products.removeIf(product -> product.getProductDescriptionList()
-                                .removeIf(pd -> !pd.getLanguage().getShortName().equals(lang))));
+        Optional.ofNullable(categoryName)
+                .ifPresent((name) ->
+                        products.removeIf(p -> !p.getCategory()
+                                .getName()
+                                .equals(name)));
+        Optional.ofNullable(language)
+                .ifPresent((lang) ->
+                        products.removeIf(product -> product.getProductDescriptionList()
+                                .removeIf(pd -> !pd.getLanguage()
+                                        .getShortName()
+                                        .equals(lang))));
         return products.stream()
-                .map(productMapper::mapProductDto)
+                .map(productMapper::mapModelToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ProductDto createProduct(ProductDto productDto) {
-        return productMapper.mapProductDto(productRepository.createProduct(productMapper.mapProduct(productDto)));
+        return productMapper.mapModelToDto(productRepository.createProduct(productMapper.mapDtoToModel(productDto)));
     }
 
     @Override
     public ProductDto updateProduct(int id, ProductDto productDto) {
         productDto.setId(id);
-        return productMapper.mapProductDto(productRepository.updateProduct(id, productMapper.mapProduct(productDto)));
+        return productMapper.mapModelToDto(productRepository.updateProduct(id, productMapper.mapDtoToModel(productDto)));
     }
 
     @Override

@@ -23,18 +23,21 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public List<ReceiptDto> getReceipts(String email) {
-        return receiptRepository.listReceipts().stream()
-                .filter(p -> p.getUser().getEmail().equals(email))
-                .map(receiptMapper::mapReceiptDto)
+        return receiptRepository.listReceipts()
+                .stream()
+                .filter(p -> p.getUser()
+                        .getEmail()
+                        .equals(email))
+                .map(receiptMapper::mapModelToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ReceiptDto makeOrder(ReceiptDto receiptDto) {
         receiptDto.setStatus(ReceiptStatus.REGISTERED);
-        Receipt receipt = receiptMapper.mapReceipt(receiptDto);
+        Receipt receipt = receiptMapper.mapDtoToModel(receiptDto);
         receipt.setUser(userRepository.getUser(receiptDto.getEmail()));
-        return receiptMapper.mapReceiptDto(receiptRepository.createReceipt(receipt));
+        return receiptMapper.mapModelToDto(receiptRepository.createReceipt(receipt));
     }
 
     @Override

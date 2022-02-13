@@ -7,8 +7,8 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface ProductMapper {
 
-    ProductDto mapProductDto(Product product);
+    ProductDto mapModelToDto(Product product);
 
-    Product mapProduct(ProductDto productDto);
+    Product mapDtoToModel(ProductDto productDto);
 
 }

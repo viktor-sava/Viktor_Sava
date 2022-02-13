@@ -20,32 +20,35 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getCategory(String name) {
-        return categoryMapper.mapCategoryDto(categoryRepository.getCategory(name));
+        return categoryMapper.mapModelToDto(categoryRepository.getCategory(name));
     }
 
     @Override
     public List<CategoryDto> listCategories() {
-        return categoryRepository.listCategories().stream()
-                .map(categoryMapper::mapCategoryDto)
+        return categoryRepository.listCategories()
+                .stream()
+                .map(categoryMapper::mapModelToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
-        return categoryMapper.mapCategoryDto(categoryRepository.createCategory(categoryMapper.mapCategory(categoryDto)));
+        return categoryMapper.mapModelToDto(categoryRepository.createCategory(categoryMapper.mapDtoToModel(categoryDto)));
     }
 
     @Override
     public CategoryDto updateCategory(String name, CategoryDto categoryDto) {
-        return categoryMapper.mapCategoryDto(
-                    categoryRepository.updateCategory(
-                            categoryRepository.getCategory(name).getId(),
-                            categoryMapper.mapCategory(categoryDto)
-                    ));
+        return categoryMapper.mapModelToDto(
+                categoryRepository.updateCategory(
+                        categoryRepository.getCategory(name)
+                                .getId(),
+                        categoryMapper.mapDtoToModel(categoryDto)
+                ));
     }
 
     @Override
     public void deleteCategory(String name) {
-        categoryRepository.deleteCategory(categoryRepository.getCategory(name).getId());
+        categoryRepository.deleteCategory(categoryRepository.getCategory(name)
+                .getId());
     }
 }

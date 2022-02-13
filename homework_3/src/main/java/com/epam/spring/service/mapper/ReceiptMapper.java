@@ -7,8 +7,8 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface ReceiptMapper {
 
-    ReceiptDto mapReceiptDto(Receipt receipt);
+    ReceiptDto mapModelToDto(Receipt receipt);
 
-    Receipt mapReceipt(ReceiptDto receiptDto);
+    Receipt mapDtoToModel(ReceiptDto receiptDto);
 
 }
