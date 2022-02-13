@@ -1,5 +1,6 @@
 package com.epam.spring.service.impl;
 
+import com.epam.spring.controller.dto.ProductDescriptionDto;
 import com.epam.spring.controller.dto.ProductDto;
 import com.epam.spring.service.ProductService;
 import com.epam.spring.service.mapper.ProductMapper;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,6 +23,9 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+
+    private static final Function<String, Predicate<ProductDescriptionDto>> isNotLanguagePredicate = l -> p ->
+            !p.getLanguage().getShortName().equals(l);
 
     @Override
     public ProductDto getProduct(String name) {
@@ -35,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getProduct(String name, String language) {
         ProductDto product = getProduct(name);
         product.getProductDescriptionList()
-                .removeIf(p -> language != null && !p.getLanguage().getShortName().equals(language));
+                .removeIf(isNotLanguagePredicate.apply(language));
         return product;
     }
 
@@ -43,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getProduct(int id, String language) {
         ProductDto product = getProduct(id);
         product.getProductDescriptionList()
-                .removeIf(p -> language != null && !p.getLanguage().getShortName().equals(language));
+                .removeIf(isNotLanguagePredicate.apply(language));
         return product;
     }
 
