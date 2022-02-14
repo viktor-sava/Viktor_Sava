@@ -1,5 +1,6 @@
 package com.epam.spring.service.repository.impl;
 
+import com.epam.spring.exception.EntityExistsException;
 import com.epam.spring.exception.UserNotFoundException;
 import com.epam.spring.service.model.User;
 import com.epam.spring.service.repository.UserRepository;
@@ -34,6 +35,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User createUser(User user) {
+        if (userList.stream().anyMatch((p) -> p.getEmail().equals(user.getEmail()))) {
+            throw new EntityExistsException("User with this email already exists");
+        }
         user.setCreateDate(Timestamp.valueOf(LocalDateTime.now()));
         user.setId(userList.size() + 1);
         userList.add(user);

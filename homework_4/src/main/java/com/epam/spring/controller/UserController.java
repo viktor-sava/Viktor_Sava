@@ -34,9 +34,16 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{email}/block")
+    @PutMapping("/{email}/block")
     public UserDto blockUser(@PathVariable String email) {
         userService.blockUser(email);
+        return userService.getUser(email);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{email}/unblock")
+    public UserDto unblockUser(@PathVariable String email) {
+        userService.unblockUser(email);
         return userService.getUser(email);
     }
 

@@ -12,7 +12,8 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class LanguageDto {
 
-    @LanguageConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @NotBlank(message = "'shortName' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
+    @LanguageConstraint(message = "'shortName' of language is not valid", groups = {OnCreate.class, OnUpdate.class})
     private String shortName;
 
     @NotBlank(message = "'fullName' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})

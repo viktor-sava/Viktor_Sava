@@ -1,6 +1,7 @@
 package com.epam.spring.controller.dto;
 
 import com.epam.spring.controller.dto.group.OnCreate;
+import com.epam.spring.controller.dto.group.OnUpdate;
 import com.epam.spring.service.model.ReceiptStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -17,22 +18,22 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReceiptDto {
 
-    @Null(message = "'id' should be absent in request", groups = OnCreate.class)
+    @Null(message = "'ReceiptDto.id' should be absent in request", groups = {OnCreate.class, OnUpdate.class})
     private Integer id;
 
-    @Null(message = "'generalPrice' should be absent in request", groups = OnCreate.class)
+    @Null(message = "'generalPrice' should be absent in request", groups = {OnCreate.class, OnUpdate.class})
     private BigDecimal generalPrice;
 
-    @NotNull(message = "'address' shouldn't be empty", groups = OnCreate.class)
-    private String address;
+    @NotNull(message = "'deliveryAddress' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
+    private String deliveryAddress;
 
-    @Null(message = "'generalPrice' should be absent in request", groups = OnCreate.class)
+    @Null(message = "'status' should be absent in request", groups = {OnCreate.class, OnUpdate.class})
     private ReceiptStatus status;
 
-    @NotNull(message = "'receiptItemList' shouldn't be empty", groups = OnCreate.class)
+    @NotNull(message = "'receiptItemList' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     private List<ReceiptItemDto> receiptItemList;
 
-    @NotNull(message = "'email' shouldn't be empty", groups = OnCreate.class)
+    @NotNull(message = "'email' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     @Email
     private String email;
 

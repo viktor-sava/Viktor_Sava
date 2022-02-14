@@ -9,6 +9,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 @Data
@@ -16,21 +17,21 @@ import javax.validation.constraints.Null;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
 
-    @NotBlank(message = "'surname' shouldn't be empty", groups = OnCreate.class)
+    @NotBlank(message = "'surname' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     private String surname;
 
-    @NotBlank(message = "'name' shouldn't be empty", groups = OnCreate.class)
+    @NotBlank(message = "'name' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     private String name;
 
-    @NotBlank(message = "'patronymic' shouldn't be empty", groups = OnCreate.class)
+    @NotBlank(message = "'patronymic' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     private String patronymic;
 
-    @Email
-    @NotBlank(message = "'email' shouldn't be empty", groups = OnCreate.class)
+    @Email(groups = {OnCreate.class, OnUpdate.class})
+    @NotBlank(message = "'email' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     private String email;
 
     @NotBlank(message = "'phone' shouldn't be empty", groups = OnCreate.class)
-    @Phone
+    @Phone(message = "'phone' is not valid", groups = OnCreate.class)
     private String phone;
 
     @NotBlank(message = "'password' shouldn't be empty", groups = OnCreate.class)
@@ -42,9 +43,9 @@ public class UserDto {
     private String repeatPassword;
 
     @Null(message = "'blocked' should be absent in request", groups = {OnCreate.class, OnUpdate.class})
-    private boolean blocked;
+    private Boolean blocked;
 
-    @NotBlank(message = "'admin' shouldn't be empty", groups = OnCreate.class)
-    private boolean admin;
+    @NotNull(message = "'admin' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
+    private Boolean admin;
 
 }

@@ -19,7 +19,7 @@ public class Receipt {
 
     private BigDecimal generalPrice;
 
-    private String address;
+    private String deliveryAddress;
 
     private ReceiptStatus status;
 

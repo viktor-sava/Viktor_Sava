@@ -55,6 +55,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void unblockUser(String email) {
+        User user = userRepository.getUser(email);
+        user.setBlocked(false);
+        userRepository.updateUser(email, user);
+        log.info("User with email {} was unblocked", email);
+    }
+
+    @Override
     public void deleteUser(String email) {
         userRepository.deleteUser(email);
         log.info("User with email {} was deleted", email);
