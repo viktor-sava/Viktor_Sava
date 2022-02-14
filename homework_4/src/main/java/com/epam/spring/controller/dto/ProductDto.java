@@ -18,7 +18,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDto {
 
-    @Null(message = "'ProductDto.id' should be absent in request", groups = OnCreate.class)
+    @Null(message = "'ProductDto.id' should be absent in request", groups = {OnCreate.class, OnUpdate.class})
     private Integer id;
 
     @NotNull(message = "'product' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
