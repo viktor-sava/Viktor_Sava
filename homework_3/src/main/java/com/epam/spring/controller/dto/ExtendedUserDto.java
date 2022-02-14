@@ -17,6 +17,10 @@ public class ExtendedUserDto {
 
     private String phone;
 
+    private String password;
+
+    private String repeatPassword;
+
     private boolean blocked;
 
     private boolean admin;
