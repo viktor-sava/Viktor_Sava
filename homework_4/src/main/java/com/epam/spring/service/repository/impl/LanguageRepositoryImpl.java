@@ -1,5 +1,6 @@
 package com.epam.spring.service.repository.impl;
 
+import com.epam.spring.exception.EntityExistsException;
 import com.epam.spring.exception.LanguageNotFoundException;
 import com.epam.spring.service.model.Language;
 import com.epam.spring.service.repository.LanguageRepository;
@@ -33,6 +34,12 @@ public class LanguageRepositoryImpl implements LanguageRepository {
 
     @Override
     public Language createLanguage(Language language) {
+        if (languageList.stream()
+                .anyMatch(p -> p.getShortName()
+                        .equals(language.getShortName()) && p.getFullName()
+                        .equals(language.getFullName()))) {
+            throw new EntityExistsException("Language with these shortName and/or fullName already exists");
+        }
         language.setId(languageList.size() + 1);
         languageList.add(language);
         return language;

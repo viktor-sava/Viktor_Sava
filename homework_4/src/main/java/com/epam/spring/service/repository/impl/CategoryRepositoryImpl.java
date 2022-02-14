@@ -1,6 +1,7 @@
 package com.epam.spring.service.repository.impl;
 
 import com.epam.spring.exception.CategoryNotFoundException;
+import com.epam.spring.exception.EntityExistsException;
 import com.epam.spring.service.model.Category;
 import com.epam.spring.service.repository.CategoryRepository;
 import org.springframework.stereotype.Repository;
@@ -35,6 +36,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public Category createCategory(Category category) {
+        if (categoryList.stream()
+                .anyMatch(p -> p.getName()
+                        .equals(category.getName()))) {
+            throw new EntityExistsException("Category with this name already exists");
+        }
         category.setId(categoryList.size() + 1);
         category.setModifiedDate(Timestamp.valueOf(LocalDateTime.now()));
         categoryList.add(category);
