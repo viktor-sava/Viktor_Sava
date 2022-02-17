@@ -34,7 +34,7 @@ public class ReceiptDto {
     private List<ReceiptItemDto> receiptItemList;
 
     @NotNull(message = "'email' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
-    @Email
+    @Email(groups = {OnCreate.class, OnUpdate.class})
     private String email;
 
 }

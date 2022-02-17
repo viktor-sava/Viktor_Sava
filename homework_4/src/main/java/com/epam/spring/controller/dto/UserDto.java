@@ -30,8 +30,8 @@ public class UserDto {
     @NotBlank(message = "'email' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     private String email;
 
-    @NotBlank(message = "'phone' shouldn't be empty", groups = OnCreate.class)
-    @Phone(message = "'phone' is not valid", groups = OnCreate.class)
+    @NotBlank(message = "'phone' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
+    @Phone(message = "'phone' is not valid", groups = {OnCreate.class, OnUpdate.class})
     private String phone;
 
     @NotBlank(message = "'password' shouldn't be empty", groups = OnCreate.class)

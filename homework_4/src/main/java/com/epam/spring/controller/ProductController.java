@@ -1,5 +1,6 @@
 package com.epam.spring.controller;
 
+import com.epam.spring.controller.dto.ProductDescriptionDto;
 import com.epam.spring.controller.dto.ProductDto;
 import com.epam.spring.controller.dto.group.OnCreate;
 import com.epam.spring.controller.dto.group.OnUpdate;
@@ -45,8 +46,11 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ProductDto createProduct(@RequestBody @Validated(OnCreate.class) ProductDto productDto) {
-            log.info("createProduct with id {}", productDto.getId());
-            return productService.createProduct(productDto);
+        log.info("createProduct with name {}", productDto.getProductDescriptionList()
+                .stream()
+                .findFirst()
+                .map(ProductDescriptionDto::getName));
+        return productService.createProduct(productDto);
     }
 
     @ResponseStatus(HttpStatus.OK)

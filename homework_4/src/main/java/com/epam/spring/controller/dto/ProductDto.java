@@ -21,7 +21,7 @@ public class ProductDto {
     @Null(message = "'ProductDto.id' should be absent in request", groups = {OnCreate.class, OnUpdate.class})
     private Integer id;
 
-    @NotNull(message = "'product' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(message = "'price' shouldn't be empty", groups = {OnCreate.class, OnUpdate.class})
     @PositiveOrZero(message = "'price' shouldn't be negative", groups = {OnCreate.class, OnUpdate.class})
     private BigDecimal price;
 

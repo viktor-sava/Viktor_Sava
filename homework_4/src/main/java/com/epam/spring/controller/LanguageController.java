@@ -1,6 +1,8 @@
 package com.epam.spring.controller;
 
 import com.epam.spring.controller.dto.LanguageDto;
+import com.epam.spring.controller.dto.group.OnCreate;
+import com.epam.spring.controller.dto.group.OnUpdate;
 import com.epam.spring.service.LanguageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +36,14 @@ public class LanguageController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public LanguageDto createLanguage(@RequestBody @Validated LanguageDto languageDto) {
+    public LanguageDto createLanguage(@RequestBody @Validated(OnCreate.class) LanguageDto languageDto) {
             log.info("createLanguage with shortName {}, fullName {}", languageDto.getShortName(), languageDto.getFullName());
             return languageService.createLanguage(languageDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{shortName}")
-    public LanguageDto updateLanguage(@PathVariable String shortName, @RequestBody @Validated LanguageDto languageDto) {
+    public LanguageDto updateLanguage(@PathVariable String shortName, @RequestBody @Validated(OnUpdate.class) LanguageDto languageDto) {
         log.info("updateLanguage with shortName {}", shortName);
         return languageService.updateLanguage(shortName, languageDto);
     }
