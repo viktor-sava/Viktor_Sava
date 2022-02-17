@@ -76,7 +76,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto createProduct(ProductDto productDto) {
-        log.info("Product with id {} was created", productDto.getId());
+        log.info("Product with name {} was created", productDto.getProductDescriptionList()
+                .stream()
+                .findFirst()
+                .map(ProductDescriptionDto::getName));
         return productMapper.mapModelToDto(productRepository.createProduct(productMapper.mapDtoToModel(productDto)));
     }
 

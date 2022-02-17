@@ -1,5 +1,6 @@
 package com.epam.spring.controller;
 
+import com.epam.spring.controller.dto.ProductDescriptionDto;
 import com.epam.spring.controller.dto.ProductDto;
 import com.epam.spring.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,10 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ProductDto createProduct(@RequestBody ProductDto productDto) {
-        log.info("createProduct with id {}", productDto.getId());
+        log.info("createProduct with name {}", productDto.getProductDescriptionList()
+                .stream()
+                .findFirst()
+                .map(ProductDescriptionDto::getName));
         return productService.createProduct(productDto);
     }
 
