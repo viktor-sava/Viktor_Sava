@@ -1,6 +1,8 @@
 package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.ReceiptDto;
+import com.epam.spring.exception.ReceiptNotFoundException;
+import com.epam.spring.exception.UserNotFoundException;
 import com.epam.spring.service.ReceiptService;
 import com.epam.spring.service.mapper.ReceiptMapper;
 import com.epam.spring.service.model.Receipt;
@@ -25,7 +27,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public List<ReceiptDto> getReceipts(String email) {
-        return receiptRepository.listReceipts()
+        return receiptRepository.findAll()
                 .stream()
                 .filter(p -> p.getUser()
                         .getEmail()
@@ -38,24 +40,27 @@ public class ReceiptServiceImpl implements ReceiptService {
     public ReceiptDto makeOrder(ReceiptDto receiptDto) {
         receiptDto.setStatus(ReceiptStatus.REGISTERED);
         Receipt receipt = receiptMapper.mapDtoToModel(receiptDto);
-        receipt.setUser(userRepository.getUser(receiptDto.getEmail()));
+        receipt.setUser(userRepository.findByEmail(receiptDto.getEmail())
+                .orElseThrow(() -> new UserNotFoundException(receiptDto.getEmail())));
         log.info("Receipt with id {} was created", receiptDto.getId());
-        return receiptMapper.mapModelToDto(receiptRepository.createReceipt(receipt));
+        return receiptMapper.mapModelToDto(receiptRepository.save(receipt));
     }
 
     @Override
     public void cancelReceipt(int id) {
-        Receipt receipt = receiptRepository.getReceipt(id);
+        Receipt receipt = receiptRepository.findById(id)
+                .orElseThrow(() -> new ReceiptNotFoundException(id));
         receipt.setStatus(ReceiptStatus.CANCELED);
-        receiptRepository.updateReceipt(id, receipt);
+        receiptRepository.save(receipt);
         log.info("Receipt with id {} was canceled", id);
     }
 
     @Override
     public void payReceipt(int id) {
-        Receipt receipt = receiptRepository.getReceipt(id);
+        Receipt receipt = receiptRepository.findById(id)
+                .orElseThrow(() -> new ReceiptNotFoundException(id));
         receipt.setStatus(ReceiptStatus.PAID);
-        receiptRepository.updateReceipt(id, receipt);
+        receiptRepository.save(receipt);
         log.info("Receipt with id {} was paid", id);
     }
 }

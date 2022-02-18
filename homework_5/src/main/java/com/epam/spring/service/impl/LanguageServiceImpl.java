@@ -1,6 +1,7 @@
 package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.LanguageDto;
+import com.epam.spring.exception.LanguageNotFoundException;
 import com.epam.spring.service.LanguageService;
 import com.epam.spring.service.mapper.LanguageMapper;
 import com.epam.spring.service.repository.LanguageRepository;
@@ -21,12 +22,13 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public LanguageDto getLanguage(String shortName) {
-        return languageMapper.mapModelToDto(languageRepository.getLanguage(shortName));
+        return languageMapper.mapModelToDto(languageRepository.findByShortName(shortName)
+                .orElseThrow(() -> new LanguageNotFoundException(shortName)));
     }
 
     @Override
     public List<LanguageDto> listLanguages() {
-        return languageRepository.listLanguages()
+        return languageRepository.findAll()
                 .stream()
                 .map(languageMapper::mapModelToDto)
                 .collect(Collectors.toList());
@@ -37,19 +39,22 @@ public class LanguageServiceImpl implements LanguageService {
         log.info("Language with shortName {}, fullName {} was created",
                 languageDto.getShortName(), languageDto.getFullName());
         return languageMapper
-                .mapModelToDto(languageRepository.createLanguage(languageMapper.mapDtoToModel(languageDto)));
+                .mapModelToDto(languageRepository.save(languageMapper.mapDtoToModel(languageDto)));
     }
 
     @Override
     public LanguageDto updateLanguage(String shortName, LanguageDto languageDto) {
+        if (!languageRepository.existsByShortName(shortName)) {
+            throw new LanguageNotFoundException(shortName);
+        }
         log.info("Language with shortName {}, fullName {} was updated", languageDto.getShortName(), languageDto.getFullName());
         return languageMapper
-                .mapModelToDto(languageRepository.updateLanguage(shortName, languageMapper.mapDtoToModel(languageDto)));
+                .mapModelToDto(languageRepository.save(languageMapper.mapDtoToModel(languageDto)));
     }
 
     @Override
     public void deleteLanguage(String shortName) {
         log.info("Language with shortName {} was deleted", shortName);
-        languageRepository.deleteLanguage(shortName);
+        languageRepository.deleteByShortName(shortName);
     }
 }

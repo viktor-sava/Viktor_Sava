@@ -1,6 +1,7 @@
 package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.UserDto;
+import com.epam.spring.exception.UserNotFoundException;
 import com.epam.spring.service.UserService;
 import com.epam.spring.service.mapper.UserMapper;
 import com.epam.spring.service.model.User;
@@ -22,12 +23,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(String email) {
-        return userMapper.mapModelToDto(userRepository.getUser(email));
+        return userMapper.mapModelToDto(userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email)));
     }
 
     @Override
     public List<UserDto> listUsers() {
-        return userRepository.listUsers()
+        return userRepository.findAll()
                 .stream()
                 .map(userMapper::mapModelToDto)
                 .collect(Collectors.toList());
@@ -36,35 +38,40 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         log.info("User with email {} was created", userDto.getEmail());
-        return userMapper.mapModelToDto(userRepository.createUser(userMapper.mapDtoToModel(userDto)));
+        return userMapper.mapModelToDto(userRepository.save(userMapper.mapDtoToModel(userDto)));
     }
 
     @Override
     public UserDto updateUser(String email, UserDto userDto) {
+        if (!userRepository.existsByEmail(email)) {
+            throw new UserNotFoundException(email);
+        }
         userDto.setEmail(email);
         log.info("User with email {} was updated", userDto.getEmail());
-        return userMapper.mapModelToDto(userRepository.updateUser(email, userMapper.mapDtoToModel(userDto)));
+        return userMapper.mapModelToDto(userRepository.save(userMapper.mapDtoToModel(userDto)));
     }
 
     @Override
     public void blockUser(String email) {
-        User user = userRepository.getUser(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
         user.setBlocked(true);
-        userRepository.updateUser(email, user);
+        userRepository.save(user);
         log.info("User with email {} was blocked", email);
     }
 
     @Override
     public void unblockUser(String email) {
-        User user = userRepository.getUser(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
         user.setBlocked(false);
-        userRepository.updateUser(email, user);
+        userRepository.save(user);
         log.info("User with email {} was unblocked", email);
     }
 
     @Override
     public void deleteUser(String email) {
-        userRepository.deleteUser(email);
+        userRepository.deleteByEmail(email);
         log.info("User with email {} was deleted", email);
     }
 }

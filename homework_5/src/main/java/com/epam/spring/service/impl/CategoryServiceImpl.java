@@ -1,6 +1,7 @@
 package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.CategoryDto;
+import com.epam.spring.exception.CategoryNotFoundException;
 import com.epam.spring.service.CategoryService;
 import com.epam.spring.service.mapper.CategoryMapper;
 import com.epam.spring.service.repository.CategoryRepository;
@@ -22,12 +23,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getCategory(String name) {
-        return categoryMapper.mapModelToDto(categoryRepository.getCategory(name));
+        return categoryMapper.mapModelToDto(categoryRepository.findByName(name)
+                .orElseThrow(() -> new CategoryNotFoundException(name)));
     }
 
     @Override
     public List<CategoryDto> listCategories() {
-        return categoryRepository.listCategories()
+        return categoryRepository.findAll()
                 .stream()
                 .map(categoryMapper::mapModelToDto)
                 .collect(Collectors.toList());
@@ -36,24 +38,24 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
         log.info("Category with id {} was created", categoryDto.getId());
-        return categoryMapper.mapModelToDto(categoryRepository.createCategory(categoryMapper.mapDtoToModel(categoryDto)));
+        return categoryMapper.mapModelToDto(categoryRepository.save(categoryMapper.mapDtoToModel(categoryDto)));
     }
 
     @Override
     public CategoryDto updateCategory(String name, CategoryDto categoryDto) {
+        if (!categoryRepository.existsByName(name)) {
+            throw new CategoryNotFoundException(name);
+        }
         log.info("Category with id {} was updated", categoryDto.getId());
         return categoryMapper.mapModelToDto(
-                categoryRepository.updateCategory(
-                        categoryRepository.getCategory(name)
-                                .getId(),
+                categoryRepository.save(
                         categoryMapper.mapDtoToModel(categoryDto)
                 ));
     }
 
     @Override
     public void deleteCategory(String name) {
-        categoryRepository.deleteCategory(categoryRepository.getCategory(name)
-                .getId());
+        categoryRepository.deleteByName(name);
         log.info("Category with name {} was deleted", name);
     }
 }

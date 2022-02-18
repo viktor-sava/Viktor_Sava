@@ -2,6 +2,7 @@ package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.ProductDescriptionDto;
 import com.epam.spring.controller.dto.ProductDto;
+import com.epam.spring.exception.ProductNotFoundException;
 import com.epam.spring.service.ProductService;
 import com.epam.spring.service.mapper.ProductMapper;
 import com.epam.spring.service.model.Product;
@@ -31,12 +32,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProduct(String name) {
-        return productMapper.mapModelToDto(productRepository.getProduct(name));
+        return productMapper.mapModelToDto(productRepository.findByProductDescriptionName(name)
+                .orElseThrow(() -> new ProductNotFoundException(name)));
     }
 
     @Override
     public ProductDto getProduct(int id) {
-        return productMapper.mapModelToDto(productRepository.getProduct(id));
+        return productMapper.mapModelToDto(productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id)));
     }
 
     @Override
@@ -57,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> listProducts(String categoryName, String language) {
-        List<Product> products = productRepository.listProducts();
+        List<Product> products = productRepository.findAll();
         Optional.ofNullable(categoryName)
                 .ifPresent((name) ->
                         products.removeIf(p -> !p.getCategory()
@@ -80,19 +83,22 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .findFirst()
                 .map(ProductDescriptionDto::getName));
-        return productMapper.mapModelToDto(productRepository.createProduct(productMapper.mapDtoToModel(productDto)));
+        return productMapper.mapModelToDto(productRepository.save(productMapper.mapDtoToModel(productDto)));
     }
 
     @Override
     public ProductDto updateProduct(int id, ProductDto productDto) {
         productDto.setId(id);
+        if (!productRepository.existsById(id)) {
+            throw new ProductNotFoundException(id);
+        }
         log.info("Product with id {} was updated", productDto.getId());
-        return productMapper.mapModelToDto(productRepository.updateProduct(id, productMapper.mapDtoToModel(productDto)));
+        return productMapper.mapModelToDto(productRepository.save( productMapper.mapDtoToModel(productDto)));
     }
 
     @Override
     public void deleteProduct(int id) {
-        productRepository.deleteProduct(id);
+        productRepository.deleteById(id);
         log.info("Product with id {} was deleted", id);
     }
 }
