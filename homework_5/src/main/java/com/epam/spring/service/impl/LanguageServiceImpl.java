@@ -1,7 +1,6 @@
 package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.LanguageDto;
-import com.epam.spring.exception.LanguageNotFoundException;
 import com.epam.spring.service.LanguageService;
 import com.epam.spring.service.mapper.LanguageMapper;
 import com.epam.spring.service.repository.LanguageRepository;
@@ -20,13 +19,12 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public LanguageDto getLanguage(String shortName) {
-        return languageMapper.mapLanguageDto(languageRepository.findByShortName(shortName)
-                .orElseThrow(LanguageNotFoundException::new));
+        return languageMapper.mapLanguageDto(languageRepository.getLanguage(shortName));
     }
 
     @Override
     public List<LanguageDto> listLanguages() {
-        return languageRepository.findAll().stream()
+        return languageRepository.listLanguages().stream()
                 .map(languageMapper::mapLanguageDto)
                 .collect(Collectors.toList());
     }
@@ -34,17 +32,17 @@ public class LanguageServiceImpl implements LanguageService {
     @Override
     public LanguageDto createLanguage(LanguageDto languageDto) {
         return languageMapper
-                .mapLanguageDto(languageRepository.save(languageMapper.mapLanguage(languageDto)));
+                .mapLanguageDto(languageRepository.createLanguage(languageMapper.mapLanguage(languageDto)));
     }
 
     @Override
     public LanguageDto updateLanguage(String shortName, LanguageDto languageDto) {
         return languageMapper
-                .mapLanguageDto(languageRepository.save(languageMapper.mapLanguage(languageDto)));
+                .mapLanguageDto(languageRepository.updateLanguage(shortName, languageMapper.mapLanguage(languageDto)));
     }
 
     @Override
     public void deleteLanguage(String shortName) {
-        languageRepository.deleteByShortName(shortName);
+        languageRepository.deleteLanguage(shortName);
     }
 }
