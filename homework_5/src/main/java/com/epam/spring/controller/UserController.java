@@ -6,11 +6,13 @@ import com.epam.spring.controller.dto.group.OnUpdate;
 import com.epam.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -22,9 +24,11 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<UserDto> getAllUsers() {
+    public List<UserDto> getAllUsers(@RequestParam(required = false) Integer page,
+                                     @RequestParam(required = false) Integer size,
+                                     @RequestParam(required = false) String[] fields) {
         log.info("getAllUsers");
-        return userService.listUsers();
+        return userService.listUsers(page, size, fields);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -59,7 +63,7 @@ public class UserController {
     @PutMapping("/{email}")
     public UserDto updateUser(@PathVariable String email, @RequestBody @Validated(OnUpdate.class) UserDto userDto) {
         log.info("updateUser by email {}", email);
-            return userService.updateUser(email, userDto);
+        return userService.updateUser(email, userDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -2,6 +2,7 @@ package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.CategoryDto;
 import com.epam.spring.exception.CategoryNotFoundException;
+import com.epam.spring.exception.EntityExistsException;
 import com.epam.spring.service.CategoryService;
 import com.epam.spring.service.mapper.CategoryMapper;
 import com.epam.spring.service.repository.CategoryRepository;
@@ -37,6 +38,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
+        if (categoryRepository.existsByName(categoryDto.getName())) {
+            throw new EntityExistsException("Category with such name already exists");
+        }
         log.info("Category with id {} was created", categoryDto.getId());
         return categoryMapper.mapModelToDto(categoryRepository.save(categoryMapper.mapDtoToModel(categoryDto)));
     }

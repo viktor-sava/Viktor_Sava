@@ -10,6 +10,8 @@ public interface UserService {
 
     List<UserDto> listUsers();
 
+    List<UserDto> listUsers(Integer page, Integer size, String[] fields);
+
     UserDto createUser(UserDto userDto);
 
     UserDto updateUser(String email, UserDto userDto);

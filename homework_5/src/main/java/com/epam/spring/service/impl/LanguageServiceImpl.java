@@ -1,6 +1,7 @@
 package com.epam.spring.service.impl;
 
 import com.epam.spring.controller.dto.LanguageDto;
+import com.epam.spring.exception.EntityExistsException;
 import com.epam.spring.exception.LanguageNotFoundException;
 import com.epam.spring.service.LanguageService;
 import com.epam.spring.service.mapper.LanguageMapper;
@@ -36,6 +37,9 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public LanguageDto createLanguage(LanguageDto languageDto) {
+        if (languageRepository.existsByShortName(languageDto.getShortName())) {
+            throw new EntityExistsException("Language with such shortName already exists");
+        }
         log.info("Language with shortName {}, fullName {} was created",
                 languageDto.getShortName(), languageDto.getFullName());
         return languageMapper

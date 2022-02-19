@@ -93,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductNotFoundException(id);
         }
         log.info("Product with id {} was updated", productDto.getId());
-        return productMapper.mapModelToDto(productRepository.save( productMapper.mapDtoToModel(productDto)));
+        return productMapper.mapModelToDto(productRepository.save(productMapper.mapDtoToModel(productDto)));
     }
 
     @Override
