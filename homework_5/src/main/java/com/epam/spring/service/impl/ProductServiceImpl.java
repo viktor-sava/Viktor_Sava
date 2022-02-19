@@ -7,6 +7,7 @@ import com.epam.spring.service.ProductService;
 import com.epam.spring.service.mapper.ProductMapper;
 import com.epam.spring.service.model.Product;
 import com.epam.spring.service.repository.ProductRepository;
+import com.epam.spring.service.utils.OptionalPageable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> listProducts(String categoryName, String language) {
         List<Product> products = productRepository.findAll();
+        applyFiltering(categoryName, language, products);
+        return products.stream()
+                .map(productMapper::mapModelToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDto> listProducts(String categoryName, String language,
+                                         Integer page, Integer size, String[] fields) {
+        List<Product> products = productRepository.findAll(OptionalPageable.ofNullable(page, size, fields))
+                .toList();
+        applyFiltering(categoryName, language, products);
+        return null;
+    }
+
+    private void applyFiltering(String categoryName, String language, List<Product> products) {
         Optional.ofNullable(categoryName)
                 .ifPresent((name) ->
                         products.removeIf(p -> !p.getCategory()
@@ -72,9 +89,6 @@ public class ProductServiceImpl implements ProductService {
                                 .removeIf(pd -> !pd.getLanguage()
                                         .getShortName()
                                         .equals(lang))));
-        return products.stream()
-                .map(productMapper::mapModelToDto)
-                .collect(Collectors.toList());
     }
 
     @Override

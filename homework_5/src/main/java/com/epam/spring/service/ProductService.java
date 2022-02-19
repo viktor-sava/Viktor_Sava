@@ -16,6 +16,8 @@ public interface ProductService {
 
     List<ProductDto> listProducts(String categoryName, String language);
 
+    List<ProductDto> listProducts(String categoryName, String language, Integer page, Integer size, String[] fields);
+
     ProductDto createProduct(ProductDto productDto);
 
     ProductDto updateProduct(int id, ProductDto productDto);

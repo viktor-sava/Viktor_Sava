@@ -24,9 +24,12 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<ProductDto> getAllProducts(@RequestParam(required = false) String categoryName,
-                                           @RequestParam(required = false) String language) {
+                                           @RequestParam(required = false) String language,
+                                           @RequestParam(required = false) Integer page,
+                                           @RequestParam(required = false) Integer size,
+                                           @RequestParam(required = false) String[] fields) {
         log.info("getAllProducts by categoryName (optional) {}, language (optional) {}", categoryName, language);
-        return productService.listProducts(categoryName, language);
+        return productService.listProducts(categoryName, language, page, size, fields);
     }
 
     @ResponseStatus(HttpStatus.OK)
