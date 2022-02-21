@@ -19,6 +19,8 @@ public class ProductDescription {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Language language;
+    private Product product;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Language language;
 }

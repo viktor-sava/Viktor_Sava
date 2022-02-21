@@ -32,7 +32,7 @@ public class Receipt {
     @Enumerated(EnumType.STRING)
     private ReceiptStatus status;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "id")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ReceiptItem> receiptItemList;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

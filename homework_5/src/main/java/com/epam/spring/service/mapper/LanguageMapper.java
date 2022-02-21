@@ -7,8 +7,8 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface LanguageMapper {
 
-    LanguageDto mapModelToDto(Language product);
+    LanguageDto mapModelToDto(Language language);
 
-    Language mapDtoToModel(LanguageDto productDto);
+    Language mapDtoToModel(LanguageDto languageDto);
 
 }
