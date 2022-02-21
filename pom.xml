@@ -18,7 +18,8 @@
     <modules>
         <module>homework_1-2</module>
         <module>homework_3</module>
-		<module>homework_4</module>    
+		<module>homework_4</module>
+        <module>homework_5</module>
     </modules>
 
     <properties>
