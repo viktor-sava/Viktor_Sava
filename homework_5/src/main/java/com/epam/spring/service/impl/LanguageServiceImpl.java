@@ -42,8 +42,7 @@ public class LanguageServiceImpl implements LanguageService {
         }
         log.info("Language with shortName {}, fullName {} was created",
                 languageDto.getShortName(), languageDto.getFullName());
-        return languageMapper
-                .mapModelToDto(languageRepository.save(languageMapper.mapDtoToModel(languageDto)));
+        return languageMapper.mapModelToDto(languageRepository.save(languageMapper.mapDtoToModel(languageDto)));
     }
 
     @Override
@@ -51,9 +50,9 @@ public class LanguageServiceImpl implements LanguageService {
         if (!languageRepository.existsByShortName(shortName)) {
             throw new LanguageNotFoundException(shortName);
         }
-        log.info("Language with shortName {}, fullName {} was updated", languageDto.getShortName(), languageDto.getFullName());
-        return languageMapper
-                .mapModelToDto(languageRepository.save(languageMapper.mapDtoToModel(languageDto)));
+        log.info("Language with shortName {}, fullName {} was updated",
+                languageDto.getShortName(), languageDto.getFullName());
+        return languageMapper.mapModelToDto(languageRepository.save(languageMapper.mapDtoToModel(languageDto)));
     }
 
     @Override

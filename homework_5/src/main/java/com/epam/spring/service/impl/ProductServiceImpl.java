@@ -74,7 +74,9 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findAll(OptionalPageable.ofNullable(page, size, fields))
                 .toList();
         applyFiltering(categoryName, language, products);
-        return products.stream().map(productMapper::mapModelToDto).collect(Collectors.toList());
+        return products.stream()
+                .map(productMapper::mapModelToDto)
+                .collect(Collectors.toList());
     }
 
     private void applyFiltering(String categoryName, String language, List<Product> products) {

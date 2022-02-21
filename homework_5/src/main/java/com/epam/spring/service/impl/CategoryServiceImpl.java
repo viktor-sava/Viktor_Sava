@@ -51,10 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw new CategoryNotFoundException(name);
         }
         log.info("Category with id {} was updated", categoryDto.getId());
-        return categoryMapper.mapModelToDto(
-                categoryRepository.save(
-                        categoryMapper.mapDtoToModel(categoryDto)
-                ));
+        return categoryMapper.mapModelToDto(categoryRepository.save(categoryMapper.mapDtoToModel(categoryDto)));
     }
 
     @Override
