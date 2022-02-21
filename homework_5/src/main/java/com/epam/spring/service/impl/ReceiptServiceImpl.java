@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,12 @@ public class ReceiptServiceImpl implements ReceiptService {
     public ReceiptDto makeOrder(ReceiptDto receiptDto) {
         receiptDto.setStatus(ReceiptStatus.REGISTERED);
         Receipt receipt = receiptMapper.mapDtoToModel(receiptDto);
+        receipt.setGeneralPrice(receiptDto.getReceiptItemList()
+                .stream()
+                .map(r -> r.getProduct()
+                        .getPrice()
+                        .multiply(BigDecimal.valueOf(r.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
         receipt.setUser(userRepository.findByEmail(receiptDto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(receiptDto.getEmail())));
         log.info("Receipt with id {} was created", receiptDto.getId());
